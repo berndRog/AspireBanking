@@ -1,0 +1,29 @@
+@page "/owners"
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize(Roles = "webtech-user")]
+
+<h3>Aktuell "eingeloggter" Nutzer</h3>
+
+@if (_ownerDto == null)
+{
+    <p>Loading....</p>
+}
+
+<table class="table">
+    <thead>
+    <tr>
+        <th>Name</th>
+        <th>Geburtsdatum</th>
+        <th>Email</th>
+    </tr>
+    </thead>
+    
+    <tbody>
+    <tr>
+        <td>@_ownerDto?.FirstName</td>
+        <td>@_ownerDto?.LastName</td>
+        <td>@_ownerDto?.Birthdate.ToShortDateString()</td>
+        <td>@_ownerDto?.Email ?? ""</td>
+    </tr>
+    </tbody>
+</table>

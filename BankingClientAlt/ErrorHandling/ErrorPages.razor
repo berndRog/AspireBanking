@@ -1,0 +1,49 @@
+@page "/error/{statusCode}/{errorMessage}"
+@inject BankingClient.ErrorHandling.ResponseErrors ResponseErrors
+
+
+
+@if (!string.IsNullOrEmpty(ErrorMessage)) {
+  <div class="alert alert-danger">
+    @StatusCode ErrorMessage
+  </div>
+}
+
+@* *@
+@* @page "/400" *@
+@* <h3>400 Bad Request: The server could not understand the request due to invalid syntax.</h3> *@
+@* *@
+@* @page "/401" *@
+@* @page "/unauthorized" *@
+@* <h3>401 Unauthorized: The client must be authenticated to get the requested response.</h3> *@
+@* *@
+@* @page "/403" *@
+@* <h3>403 Forbidden: The client does not have access rights to the content.</h3> *@
+@* *@
+@* @page "/404" *@
+@* <h3>404 Not Found: The server can not find the requested resource.</h3> *@
+@* *@
+@* @page "/405" *@
+@* <h3>405 Method Not Allowed: The request method is known by the server but is not supported by the target resource.</h3> *@
+@* *@
+@* @page "/409" *@
+@* <h3>Request could not be completed due to a conflict with the current state of the target resource.</h3> *@
+@* *@
+@* @page "/429" *@
+@* <h3>429 Too Many Requests: The user has sent too many requests in a given amount of time ("rate limiting").</h3> *@
+@* *@
+@* @page "/500" *@
+@* <h3>Something went really wrong. Please contact administrator.</h3> *@
+@* *@
+@* @page "/501" *@
+@* <h3> *@
+@*   501 Not Implemented: The server does not support the functionality required to fulfill the request.</h3> *@
+
+if (!string.IsNullOrEmpty(_errorMessage)) {
+  <div class="alert alert-danger">@ErrorMessage</div>
+}
+
+@code {
+  [Parameter] public int StatusCode { get; set; }
+  [Parameter] public string? ErrorMessage { get; set; }
+}

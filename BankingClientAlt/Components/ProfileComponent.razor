@@ -1,0 +1,20 @@
+
+<div class="settings-container">
+    <EditForm Model="owner" OnInvalidSubmit="HandleSubmit">
+
+        <DataAnnotationsValidator />
+        <ValidationSummary/>
+
+        <div class="form-group">
+            <label for="name">Name</label>
+            <InputText id="name" @bind-Value="name" class="input-control"/>
+
+            <label for="surname">Vorname</label>
+            <InputText id="surname" @bind-Value="surname" class="input-control"/>
+        </div>
+    
+        <div class="button-container">
+            <button type="submit">Submit</button>
+        </div>
+    </EditForm>
+</div>

@@ -1,0 +1,21 @@
+@using BankingClient.Services
+@inject UserStateHolder UserStateHolder 
+
+<header class="col-12 header">
+  <div>
+    <img width="300px" src="/img/suderbank.png" style="max-width:100%"/>
+    ... deine Konten auf einen Blick.
+    @if (UserStateHolder.IsAuthenticated) {
+      <p>@UserStateHolder.FirstName UserStateHolder.LastName ist angemeldet</p>
+    }
+  </div>
+</header>
+
+
+<style>
+    .header {
+        background-color: #ffffff;
+        padding-left: 5px;
+        text-align: left;
+    }
+ </style>

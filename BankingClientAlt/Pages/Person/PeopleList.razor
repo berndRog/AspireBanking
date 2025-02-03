@@ -1,0 +1,44 @@
+@page "/people"
+@layout MainLayout
+
+<h3>Übersicht Personen</h3>
+
+@if (!_personenDto.Any()) {
+    <p>Loading....</p>
+}
+
+@if (_errorMessage != null) {
+    <div class="alert alert-danger">@_errorMessage</div>
+    _errorMessage = null;
+}
+
+<table class="table">
+    <thead>
+    <tr>
+        <th>Vorname</th>
+        <th>Nachname</th>
+        <th>Email</th>
+        <th>Phone</th>
+        <th>Laden</th>
+    </tr>
+    </thead>
+    
+    <tbody>
+    
+    @if (_personenDto.Any())
+    {
+        foreach (var person in _personenDto)
+        {
+            <tr>
+                <td>@person.Firstname</td>
+                <td>@person.Lastname</td>
+                <td>@person.Email</td>
+                <td>@person.Phone</td>
+                <td>
+                    <button class="btn btn-primary" @onclick="() => LoadPerson(person)">Auswählen</button>
+                </td>
+            </tr>
+        }
+    }
+    </tbody>
+</table>

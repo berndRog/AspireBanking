@@ -1,0 +1,37 @@
+<div class="container">
+  <div class="row card first">
+    <div class="title col-sm-12">
+      <i class="fa-solid fa-building-columns"></i>
+    </div>
+    <div class="status verified col-sm-12">
+      verified
+    </div>
+    <div class="row content col-sm-12">
+      <div class="info unknownBank col-sm-12">
+        <p class="title">Institution</p>
+        Suderbank
+      </div>
+      <div class="info knownBank col-sm-12">
+        <div class="logo"></div>
+      </div>
+      <div class="info col-6">
+        <p class="title">Kontostand</p>
+        <p>@AccountBalance €</p>
+      </div>
+      <div class="info col-6">
+        <p class="title">IBAN</p>
+        <p>@AccountNumber</p>
+      </div>
+    </div>
+    <div class="footer col-sm-12">
+      <div class="action reveal">
+        <a id="newTransfer" href="" @onclick="NewTransferCallback" @onclick:preventDefault>Neue Überweisung</a>
+      </div>
+      <div class="action reveal">
+              <a id="showTransactions" href="" @onclick="ShowTransactionsCallback" @onclick:preventDefault>Umsätze</a>
+            </div>
+    </div>
+  </div>
+</div>
+
+

@@ -1,0 +1,25 @@
+@page "/accounts/{accountId:guid}/transfers/create"
+@using BankingClient.Ui.Components
+@using BankingClient.Ui.Layout
+@using Microsoft.AspNetCore.Authorization
+@layout MainLayout
+
+<div class="container mt-3">
+  @if (!string.IsNullOrEmpty(_errorMessage)) {
+    <div class="alert alert-danger">@_errorMessage</div>
+  }
+
+  <div class="col-12 mb-3 me-md-3">
+    <!-- reuse Blazor Component -->
+    <OwnerCard Owner="@_ownerDto"/>
+  </div>
+
+  <div class="col-12 mb-3">
+    <AccountCard Account="@_accountDto"/>
+  </div>
+
+  <div class="col-12 mb-3">
+    <BeneficiariesList Beneficiaries="_beneficiaryDtos" OnOpenBeneficiary="OpenBeneficiary"/>
+  </div>
+
+</div>

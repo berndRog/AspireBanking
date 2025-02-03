@@ -1,0 +1,12 @@
+﻿@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@inject NavigationManager Navigation
+@inject ILogger<RedirectToLogin> Logger
+
+@code {
+  protected override void OnInitialized() {
+    
+    Logger.LogInformation("Redirecting to login. ${Navigation.Uri}");
+    Navigation.NavigateToLogin($"authentication/login"); //?redirectUrl={Uri.EscapeDataString(Navigation.Uri)}");
+  }
+
+}

@@ -1,0 +1,90 @@
+@inject NavigationManager NavigationManager
+@inject ILogger<NavColMenu> Logger
+
+
+<nav class="navbar navbar-expand-lg flex-column">
+  @* <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" *@
+  @*         aria-expanded="false" aria-label="Toggle navigation"> *@
+  @*   <span class="navbar-toggler-icon"></span> *@
+  @* </button> *@
+  @* <div class="collapse navbar-collapse" id="navbarNav"> *@
+  <ul class="navbar-nav flex-column">
+
+    @* <nav class="col-md-3 col-lg-2"> *@
+    @*   <ul class="nav navbar-nav"> *@
+    <li class="nav-item">
+      <NavLink class="nav-link" href="/index" Match="NavLinkMatch.All">
+        <span class="oi oi-home" aria-hidden="true"></span> Mein Banking
+      </NavLink>
+    </li>
+      
+    <li class="nav-item">
+      <NavLink class="nav-link" href="/accounts" Match="NavLinkMatch.All">
+        <span class="oi oi-credit-card" aria-hidden="true"></span> Meine Konten
+      </NavLink>
+    </li>
+    <li class="nav-item">
+      <NavLink class="nav-link" href="/transactions" Match="NavLinkMatch.All">
+        <span class="oi oi-dollar" aria-hidden="true"></span> Umsätze
+      </NavLink>
+    </li>
+    <li class="nav-item">
+      <NavLink class="nav-link" href="/transfers" Match="NavLinkMatch.All">
+        <span class="oi oi-document" aria-hidden="true"></span> Überweisungen
+      </NavLink>
+    </li>
+
+    <li class="nav-item">
+      <NavLink class="nav-link" href="/person" Match="NavLinkMatch.All">
+        <span class="oi oi-person" aria-hidden="true"></span> Person hinzufügen
+      </NavLink>
+    </li>
+    <li class="nav-item">
+      <NavLink class="nav-link" href="/personen" Match="NavLinkMatch.All">
+        <span class="oi oi-people" aria-hidden="true"></span> Personen
+      </NavLink>
+    </li>
+
+    <li class="nav-item">
+      <NavLink class="nav-link" href="/settings" Match="NavLinkMatch.All">
+        <span class="oi oi-cog" aria-hidden="true"></span> Einstellungen
+      </NavLink>
+    </li>
+
+  </ul>
+  @* </div> *@
+</nav>
+
+@code {
+  protected override void OnInitialized() {
+    Logger.LogInformation("NavColMenu.OnInitialized()");
+  }
+}
+
+<style>
+  .navbar {
+    height: 0vh;
+    width: 200px;
+    align-items: flex-start;
+    justify-content: flex-start;
+  }
+
+  .navbar-nav {
+    width: 100%;
+  }
+
+  .nav-item {
+    width: 100%;
+    background-color: #e8e8e8;
+    font-size: 0.875rem;
+  }
+
+  .nav-link {
+    color: #555555;
+  }
+
+  .nav-link:hover {
+    background-color: #555555;
+    color: #e8e8e8;
+  }
+</style>

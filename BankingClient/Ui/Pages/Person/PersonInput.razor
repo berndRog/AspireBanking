@@ -1,0 +1,47 @@
+@page "/person"
+@using BankingClient.Ui.Components
+@using BankingClient.Ui.Layout
+@layout MainLayout
+
+<div class="d-flex justify-content-left">
+  <div class="card shadow-sm" style="width: 32rem;">
+    <div class="card-body">
+      <h5 class="card-title">Person hinzufügen</h5>
+
+      @if (!string.IsNullOrEmpty(_errorMessage)) {
+        <div class="alert alert-danger">@_errorMessage</div>
+      }
+
+      <InputField Id="firstname" Label="Vorname" Placeholder="Vorname" @bind-Value="_personCreate.Firstname" />
+      <InputField Id="lastname" Label="Nachname" Placeholder="Nachname" @bind-Value="_personCreate.Lastname" />
+      <InputField Id="email" Type="email" Label="E-Mail" Placeholder="name@example.com" @bind-Value="_personCreate.Email" />
+      <InputField Id="phone" Label="Telefon" Placeholder="Telefon" @bind-Value="_personCreate.Phone" />
+
+      <div class="mb-3">
+        <label class="form-label">Profilbild</label>
+        <div class="input-group">
+          @* <input type="file" class="form-control" @onchange="HandleFileSelected"> *@
+          <input type="file" class="form-control" Onchange="HandleFileSelected">
+          @* <input type="file" class="form-control" @onchange="@(async e => await HandleFileSelected((ChangeEventArgs)e))"> *@
+      </div>
+        @if (!string.IsNullOrEmpty(_imageBase64)) {
+          <div class="mt-2">
+            <img src="@_imageBase64" alt="Selected Image" class="img-thumbnail" style="max-width: 100%; height: 100px;" />
+          </div>
+        }
+      </div>
+
+      <hr/>
+
+      <InputField Id="userName" Label="Nutzername" Placeholder="Nutzername" @bind-Value="_personCreate.Username" />
+      <InputField Id="password" Type="password" Label="Passwort" Placeholder="Passwort" @bind-Value="_personCreate.Password" />
+      <InputField Id="confirmPassword" Type="password" Label="Passwort bestätigen" Placeholder="Passwort bestätigen" @bind-Value="_personCreate.ConfirmedPassword" />
+
+      <div class="d-grid gap-2 mt-3">
+        <button type="submit" class="btn btn-primary" @onclick="HandleSubmit">Senden</button>
+        <button type="button" class="btn btn-secondary" @onclick="LeaveForm">Zurück</button>
+        <button type="button" class="btn btn-danger" @onclick="CancelOperation">Abbrechen</button>
+      </div>
+    </div>
+  </div>
+</div>

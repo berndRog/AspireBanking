@@ -1,0 +1,79 @@
+<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <ServiceWorkerAssetsManifest>service-worker-assets.js</ServiceWorkerAssetsManifest>
+    <BlazorWebAssemblyLoadAllGlobalizationData>true</BlazorWebAssemblyLoadAllGlobalizationData>
+  </PropertyGroup>
+
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Authorization" Version="9.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="9.0.1"/>
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="9.0.1" PrivateAssets="all"/>
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Authentication" Version="9.0.1"/>
+    <PackageReference Include="Microsoft.Extensions.Http" Version="9.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Localization" Version="9.0.1" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.3.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ServiceWorker Include="wwwroot\service-worker.js" PublishedContent="wwwroot\service-worker.published.js"/>
+  </ItemGroup>
+
+  <ItemGroup>
+    <AdditionalFiles Include="Ui\Components\AccountCard.razor" />
+    <AdditionalFiles Include="Ui\Components\AccountList.razor" />
+    <AdditionalFiles Include="Ui\Components\BeneficiariesList.razor" />
+    <AdditionalFiles Include="Ui\Components\OwnerCard.razor" />
+    <AdditionalFiles Include="Ui\Layout\Footer.razor" />
+    <AdditionalFiles Include="Ui\Layout\Header.razor" />
+    <AdditionalFiles Include="Ui\Layout\MainLayout.razor" />
+    <AdditionalFiles Include="Ui\Layout\NavColMenu.razor" />
+    <AdditionalFiles Include="Ui\Layout\NavRowMenu.razor" />
+    <AdditionalFiles Include="Ui\Pages\Accounts\AccountDetail.razor" />
+    <AdditionalFiles Include="Ui\Pages\App.razor" />
+    <AdditionalFiles Include="Ui\Pages\Authentication.razor" />
+    <AdditionalFiles Include="Ui\Pages\Home.razor" />
+    <AdditionalFiles Include="Ui\Pages\LoginDisplay.razor" />
+    <AdditionalFiles Include="Ui\Pages\Owner\OwnerDetail.razor" />
+    <AdditionalFiles Include="Ui\Pages\Owner\OwnersList.razor" />
+    <AdditionalFiles Include="Ui\Pages\RedirectToLogin.razor" />
+    <AdditionalFiles Include="Ui\Pages\Token.razor" />
+    <AdditionalFiles Include="Ui\Pages\Transfer\TransferCreate.razor" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Ui\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="Layout\Footer.razor" />
+    <_ContentIncludedByDefault Remove="Layout\Header.razor" />
+    <_ContentIncludedByDefault Remove="Layout\MainLayout.razor" />
+    <_ContentIncludedByDefault Remove="Layout\NavColMenu.razor" />
+    <_ContentIncludedByDefault Remove="Layout\NavRowMenu.razor" />
+    <_ContentIncludedByDefault Remove="Pages\Accounts\AccountDetail.razor" />
+    <_ContentIncludedByDefault Remove="Pages\Accounts\AccountOverview.razor" />
+    <_ContentIncludedByDefault Remove="Pages\Accounts\AccountTransactions.razor" />
+    <_ContentIncludedByDefault Remove="Pages\App.razor" />
+    <_ContentIncludedByDefault Remove="Pages\Authentication.razor" />
+    <_ContentIncludedByDefault Remove="Pages\Home.razor" />
+    <_ContentIncludedByDefault Remove="Pages\LoginDisplay.razor" />
+    <_ContentIncludedByDefault Remove="Pages\Owner\OwnerDetail.razor" />
+    <_ContentIncludedByDefault Remove="Pages\Owner\OwnersList.razor" />
+    <_ContentIncludedByDefault Remove="Pages\Person\PeopleList.razor" />
+    <_ContentIncludedByDefault Remove="Pages\Person\PersonDetail.razor" />
+    <_ContentIncludedByDefault Remove="Pages\Person\PersonInput.razor" />
+    <_ContentIncludedByDefault Remove="Pages\RedirectToLogin.razor" />
+    <_ContentIncludedByDefault Remove="Pages\Settings\SettingsOverview.razor" />
+    <_ContentIncludedByDefault Remove="Pages\Token.razor" />
+    <_ContentIncludedByDefault Remove="Pages\Transfer\TransferComponent.razor" />
+    <_ContentIncludedByDefault Remove="Pages\Transfer\TransferCreate.razor" />
+    <_ContentIncludedByDefault Remove="Pages\Transfer\TransferHistoryComponent.razor" />
+    <_ContentIncludedByDefault Remove="Pages\Transfer\TransferOverview.razor" />
+  </ItemGroup>
+
+</Project>

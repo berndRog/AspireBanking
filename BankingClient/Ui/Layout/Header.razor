@@ -1,0 +1,22 @@
+@inject ILogger<Header> Logger
+<header class="col-12 header">
+  <div>
+    <img width="300px" src="/img/suderbank.png" style="max-width:100%" alt=""/>
+    ... deine Konten auf einen Blick.
+  </div>
+</header>
+
+@code {
+  protected override void OnInitialized() {
+    Logger.LogInformation("Header.OnInitialized()");
+  }
+}
+
+
+<style>
+  .header {
+    background-color: #ffffff;
+    padding-left: 5px;
+    text-align: left;
+  }
+</style>

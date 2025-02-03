@@ -1,0 +1,78 @@
+@using BankingClient.Core
+@using BankingClient.Core.Dto
+@using BankingClient.Services
+<!-- TransferHistoryComponent.razor -->
+<div class="transfer-history-container">
+@if (Transfers != null && Transfers.Any())
+{
+    <table class="transfer-history-table">
+        <thead>
+            <tr>
+                <th>Datum</th>
+                <th>Beschreibung</th>
+                <th>Betrag</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var transfer in Transfers)
+            {
+                <tr>
+                    <td>@transfer.Date.ToShortDateString()</td>
+                    <td>@transfer.Description</td>
+                    <td>@transfer.Amount.ToString("C")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>Keine Überweisungshistorie vorhanden.</p>
+}
+
+@code {
+    [Parameter] public IEnumerable<TransferDto>? Transfers { get; set; }
+    //[Parameter] public string? SelectedGuid { get; set; } 
+    [Inject] public required ITransferService TransferService { get; set; }
+}
+</div>
+
+<style>
+
+.transfer-history-container {
+max-height: 600px;
+max-width: 600px;
+overflow: auto;
+margin: auto;
+
+}
+
+h3 {
+text-align: center;
+}
+
+.transfer-history-table {
+width: 100%;
+border-collapse: collapse;
+margin-top: 20px;
+}
+
+.transfer-history-table th, .transfer-history-table td {
+border: 1px solid #ddd;
+padding: 8px;
+text-align: left;
+}
+
+.transfer-history-table th {
+background-color: #546e7a;
+color: white;
+}
+
+.transfer-history-table td {
+background-color: #f2f2f2;
+}
+
+p {
+text-align: center;
+}
+</style>

@@ -1,0 +1,52 @@
+@page "/logout"
+@using System.Text.Json
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@inject IAccessTokenProvider TokenProvider
+@inject NavigationManager Navigation
+@inject IJSRuntime JsRuntime 
+
+<h3>Logout with Token</h3>
+<button @onclick="LogoutWithIdTokenHint">Logout</button>
+
+@code {
+  public async Task LogoutWithIdTokenHint() {
+    // (1) Retrieve or build your ID token 
+    var idToken = await RetrieveIdTokenAsync(); 
+
+    // (2) Construct Keycloak logout URL
+    var keycloakLogoutUrl = 
+      "http://localhost:8080/realms/MyRealm/protocol/openid-connect/logout" +
+      $"?id_token_hint={idToken}" +
+      "&post_logout_redirect_uri=https://localhost:5001/logout";
+
+    // (3) Redirect to Keycloak
+    Navigation.NavigateTo(keycloakLogoutUrl, forceLoad: true);
+  }
+  
+  private async Task<string?> RetrieveIdTokenAsync() {
+    // Read the storage item:
+    var storageKey = "oidc.user:http://localhost:8080/realms/webtech:blazor-wasm-client";
+    var json = await JsRuntime.InvokeAsync<string>("localStorage.getItem", storageKey);
+    if (string.IsNullOrWhiteSpace(json)) {
+      // No stored user; might be logged out or never logged in
+      return "";
+    }
+    
+    // Deserialize and extract id_token:
+    var data = JsonSerializer.Deserialize<OidcUser>(json);
+    var idToken = data?.id_token;
+
+    return idToken;
+  }
+  
+  public class OidcUser {
+    public string id_token { get; set; }
+    public string access_token { get; set; }
+    public string refresh_token { get; set; }
+    public long expires_at { get; set; }
+    // Add more if needed
+  }
+}
+
+
+

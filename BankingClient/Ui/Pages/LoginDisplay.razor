@@ -1,0 +1,67 @@
+﻿@using System.Globalization
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@inject NavigationManager Navigation
+@inject SignOutSessionStateManager SignOutManager
+@inject ILogger<LoginDisplay> Logger
+
+
+<AuthorizeView>
+  <Authorized Context="authContext">
+    <AuthorizeView Policy="AdminPolicy" Context="adminContext">
+      <div class="d-flex justify-content-end align-items-center mt-3">
+        <p class="me-2 mb-0 align-self-center">@_date (Zugriff als Admin)</p>
+        <button class="btn btn-danger align-self-center me-3" @onclick="BeginLogOut">Abmelden</button>
+      </div>
+    </AuthorizeView>
+
+    <AuthorizeView Policy="UserPolicy" Context="userContext">
+      <div class="d-flex justify-content-end align-items-center mt-3">
+        <p class="me-2 mb-0 align-self-center">@_date (Zugriff als User)</p>
+        <button class="btn btn-danger align-self-center me-3" @onclick="BeginLogOut">Abmelden</button>
+      </div>
+      
+    </AuthorizeView>
+  </Authorized>
+
+  <NotAuthorized>
+    <div class="d-flex justify-content-center my-5">
+      <a class="btn btn-primary" href="authentication/login">Anmelden</a>
+    </div>
+  </NotAuthorized>
+</AuthorizeView>
+@code {
+  
+  // Format	German (de-DE) 
+  // "d"	31.01.2025	                      Short date
+  // "D"	Freitag, 31. Januar 2025	        Long date
+  // "t"	14:30	                            Short time
+  // "T"	14:30:00	                        Long time
+  // "f"	Freitag, 31. Januar 2025 14:30	  Full date/time (short time)
+  // "F"	Freitag, 31. Januar 2025 14:30:00	Full date/time (long time)
+  // "g"	31.01.2025 14:30	                General date/time (short time)
+  // "G"	31.01.2025 14:30:00	              General date/time (long time)
+  // "yyyy-MM-dd"	2025-01-31	ISO 8601 format
+  private string _date = DateTime.Now.ToString("g", CultureInfo.CurrentCulture); //"dd.MM.yyyy HH:mm:ss");
+
+  protected override void OnInitialized() {
+    Logger.LogInformation("LoginDisplay.OnInitialized()");
+  }
+  public void Dispose() {
+    
+  }
+  
+  private async Task BeginLogOut() {
+    Logger.LogInformation("LoginDisplay.BeginLogout(): Logging out...");
+    // Navigation.NavigateTo("authentication/logout");
+    
+    try {
+      await SignOutManager.SetSignOutState();
+      Navigation.NavigateTo("authentication/logout");
+      Logger.LogInformation("LoginDisplay.BeginLogout(): Logout successful.");
+    }
+    catch (Exception ex) {
+      Logger.LogError(ex, "LoginDisplay.BeginLogout(): Logout failed.");
+    }
+    
+  }
+}

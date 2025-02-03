@@ -1,0 +1,114 @@
+@page "/person"
+@layout MainLayout
+
+<div class="d-flex justify-content-left">
+  <div class="card d-flex flex-column shadow-sm" style="width: 32rem;">
+    <div class="card-body">
+      <h5 class="card-title ">Person hinzufügen</h5>
+
+      @* <EditForm Model="@_personInput" OnValidSubmit="HandleSubmit"> *@
+        @* <DataAnnotationsValidator/> *@
+        
+        @if (!string.IsNullOrEmpty(_errorMessage)) { 
+          <div class="alert alert-danger">@_errorMessage</div> 
+        }
+
+        <div class="form-floating mt-2 mb-1">
+          <InputText id="firstname" class="form-control" @bind-Value="_personInput.Firstname"placeholder="firstname" />
+          <label for="firstname" class="form-label">Vorname</label>
+        </div>
+        @* <ValidationMessage For="@(() => _personInput.Firstname)" class="error-message text-danger"/> *@
+
+        <div class="form-floating mt-2 mb-1">
+          <InputText id="lastname" class="form-control" @bind-Value="_personInput.Lastname" placeholder="lastname" />
+          <label for="lastname" class="form-label">Nachname</label>
+        </div>
+        @* <ValidationMessage For="@(() => _personInput.Lastname)" class="error-message text-danger mt-1" /> *@
+        
+        <div class="form-floating mt-2 mb-1">
+          <InputText type="email" id="email" class="form-control" @bind-Value="_personInput.Email" placeholder="name@example.com" /> 
+          <label for="email">E-Mail</label>
+        </div>
+        @* <ValidationMessage For="@(() => _personInput.Email)" class="error-message text-danger"/> *@
+
+        <div class="form-floating mt-2 mb-1">
+          <InputText id="phone" class="form-control" @bind-Value="_personInput.Phone" placeholder="phone"/>
+          <label for="phone" class="form-label">Telefon</label>
+        </div>
+        @* <ValidationMessage For="@(() => _personInput.Phone)" class="error-message text-danger"/> *@
+
+        <div class="form-floating mt-2 mb-1">
+          <div class="d-flex justify-content-between align-items-center">
+            <div class="file-input-wrapper">
+              <button type="button" class="btn btn-outline-primary">Bild auswählen</button>
+              <InputFile OnChange="HandleFileSelected" class="file-input"/>
+            </div>
+            @if (!string.IsNullOrEmpty(_imageBase64)) {
+              <img src="@_imageBase64" alt="Selected Image" class="img-thumbnail" style="max-width: 100%; height: 100px;" />
+            }
+          </div>
+        </div>
+        
+        <hr/>
+        
+        <div class="form-floating mt-2 mb-1">
+          <InputText id="userName" class="form-control" @bind-Value="_personInput.Username" placeholder="user" />
+          <label for="userName" class="form-label">Nutzername</label>
+        </div>
+        @* <ValidationMessage For="@(() => _personInput.Username)" class="error-message text-danger" /> *@
+
+        <div class="form-floating mt-2 mb-1">
+          <InputText id="password" type="password" class="form-control" @bind-Value="_personInput.Password" placeholder="password"/>
+          <label for="password" class="form-label">Passwort</label>
+        </div>
+        @* <ValidationMessage For="@(() => _personInput.Password)" class="error-message text-danger" /> *@
+
+        <div class="form-floating mt-2 mb-1">
+          <InputText id="confirmPassword" type="password" class="form-control" @bind-Value="_personInput.ConfirmedPassword" placeholder=".."/>
+          <label for="confirmPassword" class="form-label">Passwort bestätigen</label>
+        </div>
+        @* <ValidationMessage For="@(() => _personInput.ConfirmedPassword)" class="error-message text-danger" /> *@
+
+
+        <div class="button-container">
+          <button type="submit" class="btn btn-outline-primary btn-equal-width" @onclick="HandleSubmit">Senden</button>
+          <button type="button" class="btn btn-outline-secondary btn-equal-width" @onclick="LeaveForm">Zurück</button>
+          <button type="button" class="btn btn-outline-danger btn-equal-width" @onclick="CancelOperation">Abbrechen</button>
+        </div>
+
+      @* </EditForm> *@
+    </div>
+  </div>
+</div>
+
+<style>
+  .file-input-wrapper {
+    position: relative;
+    display: inline-block;
+  }
+
+  .file-input {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+  }
+
+  .error-message {
+    margin-top: 0.0rem;
+    margin-bottom: 0.75rem;
+    font-size: 0.875rem;
+  }
+  
+  .btn-equal-width {
+    width: 100%;
+  }
+  .button-container {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+  }
+</style>

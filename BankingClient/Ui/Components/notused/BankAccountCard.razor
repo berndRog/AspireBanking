@@ -1,0 +1,26 @@
+<h3>BankAccountCard</h3>
+
+<div class="card">
+    <div class="card-header">
+        Kontonummer: @AccountNumber
+    </div>
+    <div class="card-body">
+        Kontostand: @AccountBalance
+    </div>
+    <div class="card-footer">
+        <button @onclick="ToggleTransactions">Transaktionen anzeigen</button>
+    </div>
+    @if (showTransactions)
+    {
+        <div class="transactions">
+            <!-- Hier werden die letzten Transaktionen angezeigt -->
+            <ul>
+                @foreach (var transaction in Transactions)
+                {
+                    <li>@transaction</li>
+                }
+            </ul>
+        </div>
+    }
+</div>
+

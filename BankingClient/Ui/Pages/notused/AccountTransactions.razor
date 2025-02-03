@@ -1,0 +1,73 @@
+@page "/accounts/{accountId:guid}/transactions"
+
+
+<div class="form-container">
+    <label for="startDate">Startdatum</label>
+    <input type="date" id="startDate" value="" @oninput="UpdateStartDate" />
+
+    <label for="endDate">Enddatum</label>
+    <input type="date" id="endDate" value="" @oninput="UpdateEndDate" />
+    
+    <label class="divider">----- ODER -----</label>
+    
+    <label for="selectedYear">Jahr</label>
+    <select id="selectedYear" @bind="_selectedYear">
+       <option disabled selected value> -- Jahr auswählen -- </option> 
+        <option>@DateTime.Now.Year</option>
+        <option>@(DateTime.Now.Year - 1)</option>
+        <option>@(DateTime.Now.Year - 2)</option>
+    </select>
+
+    <label for="selectedAccount">Konto</label>
+    <select id="selectedAccount" @bind="_selectedAccountId">
+        @if (_accounts != null)
+        {
+            foreach (var account in _accounts)
+            {
+                <option value="@account.Id">@account.Iban</option>
+            }
+        }
+    </select>
+
+    
+  
+    <button @onclick="ShowTransactions">Umsätze anzeigen</button>
+</div>
+
+<p>Ausgewählter Account: @_selectedAccountId</p>
+
+@if(_showTransactions) {
+
+<div class="tablecontainer">
+    <table>
+        <thead>
+        <tr>
+            <th>Datum</th>
+            <th>Art</th>
+            <th>Betrag</th>
+        </tr>
+        </thead>
+        <tbody>
+        @if (_transactions != null && _transactions.Any())
+        {
+            @foreach (var transaction in _transactions)
+            {
+                <tr>
+                    <td>@transaction.Date.ToLocalTime()</td>
+                    @if (transaction.Amount >= 0)
+                    {
+                        <td class="income">Eingang</td>
+                        <td class="income">@transaction.Amount</td>
+                    }
+                    else
+                    {
+                        <td class="expense">Ausgang</td>
+                        <td class="expense">@transaction.Amount</td>
+                    }
+                </tr>
+            }
+        }
+        </tbody>
+    </table>
+</div>
+}

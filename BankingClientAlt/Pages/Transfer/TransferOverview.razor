@@ -1,0 +1,46 @@
+@page "/transfers/{AccountId:guid}"
+@page "/transfers/"
+@using BankingClient.Dto
+@using BankingClient.Services
+
+<div class="d-flex">
+    <div class="flex-grow-1 p-2">
+        @if (AccountId != Guid.Empty) {
+            <TransferComponent SelectedAccountId="@AccountId" 
+                               OnTransfer="UpdateTransferHistory"/>
+        }
+        else {
+            <TransferComponent SelectedAccountId="@AccountId"
+                               OnTransfer="HandleSelectedAccountIdChanged"/>
+        }
+    </div>
+    <div class="flex-grow-1 p-2">
+        <TransferHistoryComponent transfers="@_transferDtos"/>
+    </div>
+</div>
+
+@code {
+    private IEnumerable<TransferDto>? _transferDtos = null;
+    private Guid _selectedAccountId;
+
+    [Parameter] public Guid AccountId { get; set; }
+    [Inject] public required ITransferService TransferService { get; set; }
+
+    protected override async Task OnInitializedAsync() {
+        if (AccountId == Guid.Empty) {
+            return;
+        }
+        await base.OnInitializedAsync();
+        _transferDtos = await TransferService.GetTransfersByAccountId(AccountId);
+    }
+
+    private async Task UpdateTransferHistory() {
+        _transferDtos = await TransferService.GetTransfersByAccountId(AccountId);
+    }
+
+    private async Task HandleSelectedAccountIdChanged(Guid newAccountId) {
+        _selectedAccountId = newAccountId;
+        await UpdateTransferHistory();
+    }
+
+}

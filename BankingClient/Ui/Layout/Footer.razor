@@ -1,0 +1,22 @@
+@inject ILogger<Footer> Logger
+<footer class="col-12">
+    <p class="text-left mb-0">&copy; Suderbank @Year. Alle Rechte vorbehalten.</p>
+</footer>
+
+
+@code {
+    private int Year => DateTime.Now.Year;
+    protected override void OnInitialized() {
+        Logger.LogInformation("Footer.OnInitialized()");
+    }
+}
+
+<style>
+footer {
+    background-color: #e8e8e8;
+    padding: 10px;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+</style>

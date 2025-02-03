@@ -1,0 +1,79 @@
+@using BankingClient.Services
+@inject NavigationManager NavigationManager
+@inject UserStateHolder UserState
+
+<div class="navbar-container">
+  <!-- First row of the navbar -->
+  <nav class="navbar py-0 mt-0 mb-0 navbar-expand-sm  bg-body-secondary">
+    <ul class="navbar-nav me-auto">
+      <li class="nav-item">
+        <NavLink class="nav-link" href="/index" Match="NavLinkMatch.All">
+          <span class="oi oi-home" aria-hidden="true"> Start</span>
+        </NavLink>
+      </li>
+
+      <li class="nav-item">
+        <NavLink class="nav-link" href="/login" Match="NavLinkMatch.All">
+          <span class="oi oi-account-login" aria-hidden="true"> Anmelden</span>
+        </NavLink>
+      </li>
+
+      <li class="nav-item">
+        <NavLink class="nav-link" href="/logout" Match="NavLinkMatch.All">
+          <span class="oi oi-account-logout" aria-hidden="true"> Abmelden</span>
+        </NavLink>
+      </li>
+
+      <li class="nav-item">
+        <NavLink class="nav-link" href="/accounts" Match="NavLinkMatch.All">
+          <span class="oi oi-credit-card" aria-hidden="true"/> Konten
+        </NavLink>
+      </li>
+
+      <li class="nav-item">
+        <NavLink class="nav-link" href="/transactions" Match="NavLinkMatch.All">
+          <span class="oi oi-dollar" aria-hidden="true"/> Umsätze
+        </NavLink>
+      </li>
+      <li class="nav-item">
+        <NavLink class="nav-link" href="/transfers" Match="NavLinkMatch.All">
+          <span class="oi oi-document" aria-hidden="true"/> Überweisungen
+        </NavLink>
+      </li>
+    </ul>
+
+
+  </nav>
+
+  <!-- Second row of the navbar -->
+  <nav class="navbar py-0 mt-0 mb-2 navbar-expand-sm bg-body-secondary">
+    <ul class="navbar-nav me-auto">
+      <li class="nav-item">
+        <NavLink class="nav-link" href="/person" Match="NavLinkMatch.All">
+          <span class="oi bi-person-add"/> Person hinzufügen
+        </NavLink>
+      </li>
+      <li class="nav-item">
+        <NavLink class="nav-link" href="/people" Match="NavLinkMatch.All">
+          <span class="bi bi-people"> Personen</span>
+        </NavLink>
+      </li>
+    </ul>
+  </nav>
+</div>
+
+
+<style>
+    .nav-item {
+      font-size: 1.0rem;
+    }
+
+    .nav-link {
+      color: #555555;
+    }
+    .nav-link:hover {
+        background-color: #555555; 
+        color: #e8e8e8;
+    }
+    
+</style>

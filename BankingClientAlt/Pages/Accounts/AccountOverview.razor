@@ -1,0 +1,62 @@
+@page "/accounts"
+@using System.ComponentModel.DataAnnotations
+@using BankingClient.Components
+@using BankingClient.Dto
+@using BankingClient.Services
+@inject IAccountService AccountService
+
+
+<div class="flex-container">
+    @if (Accounts != null && Accounts.Any())
+    {
+        @foreach (var account in Accounts)
+        {
+            <BankAccountCreditCard
+                AccountBalance=@account.Balance
+                AccountNumber=@account.Iban
+                NewTransferCallback="() => NavigateNewTransfers(account.Id)"
+                ShowTransactionsCallback="() => ShowTransactions(account.Id)"/>
+        }
+    }
+    else
+    {
+        <p>No accounts found.</p>
+    }
+</div>
+
+@code {
+    [Inject] public required NavigationManager NavigationManager { get; set; }
+    [Inject] public required UserStateHolder UserStateHolder { get; set; }
+    
+    private BankAccountCard? _bankAccountCard;
+    private BankAccountCreditCard? _bankAccountCreditCard;
+    
+    private IEnumerable<AccountDto>? Accounts;
+
+    protected override async Task OnInitializedAsync()
+    {
+    // Fetch accounts for logged-in owner
+        if (UserStateHolder.IsAuthenticated)
+        {
+            
+            Accounts = await AccountService.GetAllAccountsByOwner(UserStateHolder.OwnerDto.Id);
+        }
+    }
+
+    private string FormatBalance(double balance)
+    {
+        return $"{balance} €";
+    }
+
+    private void NavigateNewTransfers(Guid accountId)
+    {  
+        // go to /transfers page
+       NavigationManager.NavigateTo($"/transfers/{accountId}"); 
+    }
+
+    private void ShowTransactions(Guid accountId)
+    {
+        //TODO go to /transactions page and show transactions of last month     
+        NavigationManager.NavigateTo($"/transactions");
+    }
+}

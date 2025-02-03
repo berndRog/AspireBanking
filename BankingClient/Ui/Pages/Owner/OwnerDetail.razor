@@ -1,0 +1,26 @@
+@page "/owner/{Id:guid}"
+@using BankingClient.Ui.Components
+@using BankingClient.Ui.Layout
+@using Microsoft.AspNetCore.Authorization
+@layout MainLayout
+
+
+@attribute [Authorize(Policy = "CombinedPolicy")]
+<div class="container mt-3">
+  @if (!string.IsNullOrEmpty(_errorMessage)) {
+    <div class="alert alert-danger">@_errorMessage</div>
+  }
+  <div class="row">
+    <!-- Kontoinhaber Card -->
+    <div class="col-12 mb-1 me-md-1">
+      <!-- reuse Blazor Component -->
+      <OwnerCard Owner="@_ownerDto" />
+    </div>
+
+    <!-- Konten Liste -->
+    <div class="col-12 mb-1">
+      <AccountList Accounts="@_accountDtos" OnOpenAccount="OpenAccount" />
+    </div>
+
+  </div>
+</div>

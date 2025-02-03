@@ -1,0 +1,57 @@
+@page "/token"
+
+
+<button class="btn btn-secondary my-3" @onclick="LeavePage">Close</button>
+
+@if (userStateHolder.CurrentUser == null) {
+  <p>Loading...</p>
+}
+else {
+  // Check if the user is authenticated
+  if (userStateHolder.IsAuthenticated) {
+    <table class="table">
+      <tbody>
+      <tr>
+        <td>FirstName</td>
+        <td>@userStateHolder.FirstName</td>
+      </tr>
+      <tr>
+        <td>LastName</td>
+        <td>@userStateHolder.LastName</td>
+      </tr>
+      <tr>
+        <td>Email</td>
+        <td>@userStateHolder.Email</td>
+      </tr>
+      <tr>
+        <td>UserName</td>
+        <td>@userStateHolder.UserName</td>
+      </tr>
+      <tr>
+        <td>UserId</td>
+        <td>@userStateHolder.UserId</td>
+      </tr>
+      <tr>
+        <td>Role</td>
+        <td>@userStateHolder.UserRole</td>
+      </tr>
+      </tbody>
+    </table>
+
+    <h5>ID-Token</h5>
+    <ul>
+      @foreach (var claim in userStateHolder.CurrentUser.Claims.OrderBy(c => c.Type)) {
+        <li>@claim.Type: @claim.Value</li>
+      }
+    </ul>
+
+    <h5>Access-Token</h5>
+    <ul>
+      @if (userStateHolder.AccessToken != null) {
+        @foreach (var param in userStateHolder.AccessTokenParams!) {
+          <li>@param.Key: @param.Value</li>
+        }
+      }
+    </ul>
+  }
+}

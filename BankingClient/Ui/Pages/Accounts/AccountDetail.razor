@@ -1,0 +1,37 @@
+@page "/accounts/iban/{Iban}"
+@using System.Globalization
+@using BankingClient.Ui.Components
+@using BankingClient.Ui.Layout
+@layout MainLayout
+
+<div class="container mt-3">
+  @if (!string.IsNullOrEmpty(_errorMessage)) {
+    <div class="alert alert-danger">@_errorMessage</div>
+  }
+
+
+  <div class="row">
+    <!-- Kontoinhaber Card -->
+    <div class="col-12 mb-3 me-md-3">
+      <!-- reuse Blazor Component -->
+      <OwnerCard Owner="@_ownerDto"/>
+    </div>
+
+    <!-- Konto -->
+    <div class="col-12 mb-3">
+      <AccountCard Account="@_accountDto"/>
+    </div>
+
+    <!-- Buttons Row (wrapped in a column for proper alignment) -->
+    <div class="col-12">
+      <div class="row">
+        <div class="col-6">
+          <button class="btn btn-primary w-100" @onclick="HandleTransfers">Überweisen</button>
+        </div>
+        <div class="col-6">
+          <button class="btn btn-primary w-100" @onclick="HandleTransactions">Kontoauszüge</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

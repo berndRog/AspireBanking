@@ -1,0 +1,40 @@
+﻿@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@inject NavigationManager Navigation
+@inject SignOutSessionStateManager SignOutManager
+@inject ILogger<LoginDisplay> Logger 
+
+<AuthorizeView>
+  
+  <Authorized>
+    Hello, @context.User.Identity?.Name!
+    <button class="nav-link btn btn-link" @onclick="BeginLogOut">Log out</button>
+  </Authorized>
+  
+  <NotAuthorized>
+    <p>User is not authenticated
+      <a href="authentication/login">Log in</a>
+    </p>
+  </NotAuthorized>
+
+  </AuthorizeView>
+
+@code{
+
+  public async Task BeginLogOut() {
+    // local Logout, i.e. deleting the token from the local storage
+    //Navigation.NavigateToLogout("authentication/logout");
+    
+    
+    Logger.LogInformation("Logging out...");
+    try {
+      await SignOutManager.SetSignOutState();
+      Navigation.NavigateTo("authentication/logout");
+    }
+    catch (Exception ex) {
+      Logger.LogError(ex, "Logout failed.");
+    }
+    
+    
+  }
+
+}

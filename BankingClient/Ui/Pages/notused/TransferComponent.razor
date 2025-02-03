@@ -1,0 +1,51 @@
+<div class="transfer-container">
+    <h3>Überweisung tätigen</h3>
+    <EditForm Model="_transfer" OnValidSubmit="HandleSubmit">
+        <DataAnnotationsValidator />
+        <div class="form-group">
+            <label for="AccountId">Zu belastendes Konto</label>
+            <InputSelect id="AccountId" @bind-Value="SelectedAccountId"  class="input-control">
+                <option select>Zu belastendes Konto</option>
+                @if (_accounts != null)
+                {
+                    foreach (var account in _accounts)
+                    {
+                        <option value="@account.Id">@account.Iban</option>
+                    }
+                }
+            </InputSelect>
+
+            <ValidationMessage For="@(() => _transfer.AccountId)" />
+            <label for="BeneficiaryId">Empfänger:</label>
+            <InputSelect id="BeneficiaryId"  @bind-Value="SelectedBeneficiaryId" class="input-control">
+                <option selected>Empfänger</option>
+                @if (_beneficiaries != null)
+                {
+                    foreach (var beneficiary in _beneficiaries)
+                    {
+                        <option value="@beneficiary.Id">@beneficiary.FirstName</option>
+                    }
+                }
+            </InputSelect>
+                <ValidationMessage For="@(() => _transfer.BeneficiaryId)"/>
+        </div>
+
+        <div class="form-group">
+            <label for="amount">Betrag:</label>
+            <InputNumber id="amount" @bind-Value="_transfer.Amount" class="input-control" step="0.01" />
+            <ValidationMessage For="@(() => _transfer.Amount)" />
+        </div>
+
+        <div class="form-group">
+            <label for="Description">Verwendungszweck:</label>
+            <InputText id="Description" @bind-Value="_transfer.Description" class="input-control" />
+            <ValidationMessage For="@(() => _transfer.Description)" />
+        </div>
+
+        <div class="button-container">
+            <button type="submit">Überweisung durchführen</button>
+        </div>
+    </EditForm>
+</div>
+
+

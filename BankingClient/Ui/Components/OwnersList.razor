@@ -1,0 +1,49 @@
+@using System.Globalization
+@using BankingClient.Core.Dto
+<div class="card shadow-sm w-100">
+  <div class="card-body">
+    <h6 class="card-title">Kontoinhaber</h6>
+
+    @if (Owners?.Any() == true) {
+      <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
+        <table class="table table-sm table-striped table-hover">
+          <thead>
+          <tr>
+            <th class="fw-normal">Vorname</th>
+            <th class="fw-normal">Nachname</th>
+            <th class="fw-normal">Email</th>
+            <th class="fw-normal">UserName</th>
+            <th class="fw-normal">Id</th>
+            <th class="fw-normal">UserId</th>
+          </tr>
+          </thead>
+          <tbody>
+          @foreach (var owner in Owners) {
+            <tr>
+              <td>@owner.FirstName</td>
+              <td>@owner.LastName</td>
+              <td>@owner.Email</td>
+              <td>@owner.UserName</td>
+              <td>@owner.Id</td>
+              <td>@owner.UserId</td>
+              <td>
+                <button class="btn btn-primary btn-sm" @onclick="() => OnOpenOwner.InvokeAsync(owner.Id)">
+                  Kontoinhaber öffnen
+                </button>
+              </td>
+            </tr>
+          }
+          </tbody>
+        </table>
+      </div>
+    }
+    else {
+      <p>Keine Konten verfügbar.</p>
+    }
+  </div>
+</div>
+
+@code {
+  [Parameter] public List<OwnerDto> Owners { get; set; } = [];
+  [Parameter] public EventCallback<Guid> OnOpenOwner { get; set; }
+}

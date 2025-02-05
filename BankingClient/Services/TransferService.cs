@@ -4,18 +4,9 @@ using BankingClient.Core.Dto;
 namespace BankingClient.Services;
 
 public class TransferService(
-   IHttpClientFactory httpClientFactory,
-   IConfiguration configuration,
-   JsonSerializerOptions jsonOptions,
-   CancellationTokenSource cancellationTokenSource,
-   ILogger<TransferService> logger
-) : BaseWebService<TransferService>(
-   httpClientFactory: httpClientFactory,
-   configuration: configuration,
-   jsonOptions: jsonOptions,   
-   cancellationTokenSource: cancellationTokenSource,
-   logger: logger
-), ITransferService {
+   WebServiceOptions<TransferService> options
+): BaseWebService<TransferService>(options), ITransferService {
+
    // Get Transfer by accountID
    public async Task<ResultData<IEnumerable<TransferDto>?>> GetByAccountId(
       Guid accountId

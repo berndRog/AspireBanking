@@ -5,18 +5,8 @@ using Microsoft.AspNetCore.Authorization;
 namespace BankingClient.Services;
 
 public class BeneficiaryService(
-    IHttpClientFactory httpClientFactory,
-    IConfiguration configuration,
-    JsonSerializerOptions jsonOptions,
-    CancellationTokenSource cancellationTokenSource,
-    ILogger<BeneficiaryService> logger
-): BaseWebService<BeneficiaryService>(
-    httpClientFactory: httpClientFactory, 
-    configuration: configuration, 
-    jsonOptions: jsonOptions,
-    cancellationTokenSource: cancellationTokenSource,
-    logger: logger
-), IBeneficiaryService {
+    WebServiceOptions<BeneficiaryService> options
+): BaseWebService<BeneficiaryService>(options), IBeneficiaryService {
     
     // GET: All beneficiaries of an account with given accountid string /banking/v2/accounts/{accountId}/beneficiaries
     public async Task<ResultData<IEnumerable<BeneficiaryDto>?>> GetAllBeneficiariesByAccount(Guid accountId) =>

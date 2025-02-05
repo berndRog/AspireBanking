@@ -4,18 +4,13 @@ using BankingClient.Core;
 namespace BankingClient.Services;
 
 public abstract class BaseWebService<TService> (
-   IHttpClientFactory httpClientFactory,  
-   IConfiguration configuration,
-   JsonSerializerOptions jsonOptions,
-   CancellationTokenSource cancellationTokenSource,
-   ILogger<TService> logger
+   WebServiceOptions<TService> options
 ) where TService : class  {
-   
    // the base address is http://localhost:5000/banking/v3/
-   protected readonly HttpClient _httpClient = httpClientFactory.CreateClient("BankingApi");
-   protected readonly JsonSerializerOptions _jsonOptions = jsonOptions;
-   protected readonly CancellationToken _cancellationToken = cancellationTokenSource.Token;
-   protected readonly ILogger<TService> _logger = logger;
+   protected readonly HttpClient _httpClient = options.HttpClientFactory.CreateClient("BankingApi");
+   protected readonly JsonSerializerOptions _jsonOptions = options.JsonOptions;
+   protected readonly CancellationToken _cancellationToken = options.CancellationTokenSource.Token;
+   protected readonly ILogger<TService> _logger = options.Logger;
    
    protected Task<ResultData<IEnumerable<TDto>?>> GetAllAsync<TDto>(string path) where TDto : class {
       return SendRequestAsync<IEnumerable<TDto>>(
@@ -173,7 +168,4 @@ public abstract class BaseWebService<TService> (
    //       throw new Exception(message + e.Message);
    //    }
    // }
-   
-   
-   
 }

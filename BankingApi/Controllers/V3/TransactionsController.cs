@@ -10,13 +10,12 @@ using BankingApi.Core.Misc;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-namespace BankingApi.Controllers.V2;
+namespace BankingApi.Controllers.V3;
 [Route("banking/v{version:apiVersion}")]
 [ApiVersion("3.0")]
 [ApiController]
 public class TransactionsController(
    IAccountsRepository accountsRepository,
-   ITransfersRepository transfersRepository,
    ITransactionsRepository transactionsRepository,
    IMapper mapper,
    ILogger<TransactionsController> logger 

@@ -99,7 +99,6 @@ public class BaseControllerUt {
       );
       _transactionsController = new TransactionsController(
          _mockAccountsRepository.Object,
-         _mockTransfersRepository.Object,
          _mockTransactionsRepository.Object,
          _mapper,
          loggerFactory.CreateLogger<TransactionsController>()

@@ -4,21 +4,9 @@ using BankingClient.Core.Dto;
 using Microsoft.AspNetCore.Authorization;
 namespace BankingClient.Services;
 
-
 public class OwnerService(
-   IHttpClientFactory httpClientFactory,
-   IConfiguration configuration,
-   JsonSerializerOptions jsonOptions,
-   CancellationTokenSource cancellationTokenSource,
-   ILogger<OwnerService> logger
-): BaseWebService<OwnerService>(
-   httpClientFactory: httpClientFactory, 
-   configuration: configuration, 
-   jsonOptions: jsonOptions,
-   cancellationTokenSource: cancellationTokenSource,
-   logger: logger
-), IOwnerService {
-
+   WebServiceOptions<OwnerService> options
+): BaseWebService<OwnerService>(options), IOwnerService {
 
    // Get all owners 
    [Authorize(Policy = "AdminPolicy")]

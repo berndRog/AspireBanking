@@ -75,7 +75,7 @@ public class UseCasesTransferUt : BaseRepositoryUt {
    [Fact]
    public async Task ReverseMoneyAsyncUt() {
       // Arrange
-      _arrangeTest.SendMoneyTest1(_seed);
+      await _arrangeTest.SendMoneyTest1(_seed);
       var originalTransfer = _seed.Transfer1;
       var reverseTransferDto = new TransferDto(
          Id: Guid.NewGuid(),

@@ -1,22 +1,11 @@
-using System.Text.Json;
 using BankingClient.Core;
 using BankingClient.Core.Dto;
 using Microsoft.AspNetCore.Authorization;
 namespace BankingClient.Services;
 
 public class AccountService(
-   IHttpClientFactory httpClientFactory,
-   IConfiguration configuration,
-   JsonSerializerOptions jsonOptions,
-   CancellationTokenSource cancellationTokenSource,
-   ILogger<AccountService> logger
-) : BaseWebService<AccountService>(
-   httpClientFactory: httpClientFactory,
-   configuration: configuration,
-   jsonOptions: jsonOptions,
-   cancellationTokenSource: cancellationTokenSource,
-   logger: logger
-), IAccountService {
+   WebServiceOptions<AccountService> options
+): BaseWebService<AccountService>(options), IAccountService {
    
    // Get all accounts 
    [Authorize(Policy = "AdminPolicy")]

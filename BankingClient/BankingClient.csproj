@@ -30,12 +30,9 @@
     <AdditionalFiles Include="Ui\Layout\Header.razor" />
     <AdditionalFiles Include="Ui\Layout\NavColMenu.razor" />
     <AdditionalFiles Include="Ui\Layout\NavRowMenu.razor" />
-    <AdditionalFiles Include="Ui\Pages\App.razor" />
     <AdditionalFiles Include="Ui\Pages\Authentication.razor" />
     <AdditionalFiles Include="Ui\Pages\Home.razor" />
-    <AdditionalFiles Include="Ui\Pages\LoginDisplay.razor" />
     <AdditionalFiles Include="Ui\Pages\Owner\OwnerDetail.razor" />
-    <AdditionalFiles Include="Ui\Pages\RedirectToLogin.razor" />
     <AdditionalFiles Include="Ui\Pages\Token.razor" />
     <AdditionalFiles Include="Ui\Pages\Transfer\TransferCreate.razor" />
   </ItemGroup>
@@ -65,6 +62,10 @@
     <_ContentIncludedByDefault Remove="Pages\Transfer\TransferCreate.razor" />
     <_ContentIncludedByDefault Remove="Pages\Transfer\TransferHistoryComponent.razor" />
     <_ContentIncludedByDefault Remove="Pages\Transfer\TransferOverview.razor" />
+    <_ContentIncludedByDefault Remove="Ui\Pages\notused\AccountOverview.razor" />
+    <_ContentIncludedByDefault Remove="Ui\Pages\notused\AccountTransactions.razor" />
+    <_ContentIncludedByDefault Remove="Ui\Pages\notused\TransferOverview.razor" />
+    <_ContentIncludedByDefault Remove="Ui\Pages\Settings\SettingsOverview.razor" />
   </ItemGroup>
 
 </Project>

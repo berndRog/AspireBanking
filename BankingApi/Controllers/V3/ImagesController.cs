@@ -18,8 +18,7 @@ namespace BankingApi.Controllers.V2;
 [ApiController]
 public class ImagesController(
    IWebHostEnvironment webHostingEnvironment,
-   ImagesRepository repository,
-   IMapper mapper
+   ImagesRepository repository
 ) : ControllerBase {
    private static readonly Dictionary<string, string> MimeTypeMap = new() {
       { "image/jpeg", "jpg" },
@@ -156,7 +155,7 @@ public class ImagesController(
    [ProducesResponseType(StatusCodes.Status204NoContent)]
    [ProducesResponseType(StatusCodes.Status404NotFound)]
    [ProducesDefaultResponseType]
-   public async Task<IActionResult> Delete(
+   public IActionResult Delete(
       [FromRoute] string filename
    ) {
       var path = Path.Combine(webHostingEnvironment.WebRootPath, "images", filename);

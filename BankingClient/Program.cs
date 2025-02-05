@@ -73,8 +73,15 @@ public class Program {
       });
       
       // add the services for the BankinApi
-      builder.Services.AddScoped<IOwnerService, OwnerService>();
+      // WebServiceOptions<TService>
+      builder.Services.AddScoped(WebServiceOptions<AccountService>.Create);
+      builder.Services.AddScoped(WebServiceOptions<OwnerService>.Create);
+      builder.Services.AddScoped(WebServiceOptions<BeneficiaryService>.Create);
+      builder.Services.AddScoped(WebServiceOptions<TransactionService>.Create);
+      builder.Services.AddScoped(WebServiceOptions<TransferService>.Create);
+      // web services
       builder.Services.AddScoped<IAccountService, AccountService>();
+      builder.Services.AddScoped<IOwnerService, OwnerService>();
       builder.Services.AddScoped<IBeneficiaryService, BeneficiaryService>();
       builder.Services.AddScoped<ITransactionService, TransactionService>();
       builder.Services.AddScoped<ITransferService, TransferService>();
@@ -84,8 +91,6 @@ public class Program {
       // foreach (var section in builder.Configuration.AsEnumerable()) {
       //    logger.LogInformation("{Key}: {Value}", section.Key, section.Value);
       // }
-      
-      
       logger.LogInformation("Blazor WASM is starting...");
       
       var app = builder.Build();
@@ -97,6 +102,27 @@ public class Program {
       
       await app.RunAsync();
    }
+   
+   public static object CreateWebServiceOptions(
+      IServiceProvider serviceProvider,
+      Type serviceType
+   ) {
+      var httpClientFactory = serviceProvider.GetRequiredService<IHttpClientFactory>();
+      var configuration = serviceProvider.GetRequiredService<IConfiguration>();
+      var jsonOptions = serviceProvider.GetRequiredService<JsonSerializerOptions>();
+      var loggerFactory = serviceProvider.GetRequiredService<ILoggerFactory>();
+   
+      var genericType = typeof(WebServiceOptions<>).MakeGenericType(serviceType);
+      var instance = Activator.CreateInstance(genericType,
+         httpClientFactory,
+         configuration,
+         jsonOptions,
+         new CancellationTokenSource(),
+         loggerFactory.CreateLogger(serviceType)
+      );
+      return instance!;
+   }
+   
 }
 
 public class LowerCaseNamingPolicy : JsonNamingPolicy {

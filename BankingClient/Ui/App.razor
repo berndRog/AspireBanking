@@ -31,6 +31,7 @@
 </CascadingAuthenticationState>
 
 @code {
+  private bool _initialized = false;
   private Type _layoutType = typeof(MainLayoutUser); // Default layout for unauthenticated users
   private bool _isEventSubscribed;
   private bool _isNavigatedToToken = false; // Prevent duplicate navigation
@@ -41,6 +42,22 @@
 
   protected override async Task OnAfterRenderAsync(bool firstRender) {
     if (firstRender) {
+      
+      // block access to certain paths
+      Logger.LogInformation("App: Blocking access to certain paths");
+      var blockedPaths = new List<string> {
+        "/appsettings.json", 
+        "/appsettings.Development.json",
+        "/config.json", 
+        "/secrets.json",
+        "/.git"
+      };
+      var currentPath = Navigation.Uri.ToLower();
+      if (blockedPaths.Any(p => currentPath.Contains(p))) {
+        Navigation.NavigateTo("/", forceLoad: true);
+      }
+      _initialized = true;
+      
       if (!_isEventSubscribed) {
         Logger.LogInformation("App: Subscribing to AuthenticationStateChanged event");
         AuthenticationProvider.AuthenticationStateChanged += OnAuthenticationStateChanged;

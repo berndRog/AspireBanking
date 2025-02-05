@@ -4,19 +4,9 @@ using BankingClient.Core.Dto;
 namespace BankingClient.Services;
 
 public class TransactionService(
-   IHttpClientFactory httpClientFactory,
-   IConfiguration configuration,
-   JsonSerializerOptions jsonOptions,
-   CancellationTokenSource cancellationTokenSource,
-   ILogger<TransactionService> logger
-): BaseWebService<TransactionService>(
-   httpClientFactory: httpClientFactory, 
-   configuration: configuration, 
-   jsonOptions: jsonOptions,
-   cancellationTokenSource: cancellationTokenSource,
-   logger: logger
-), ITransactionService {
-   
+   WebServiceOptions<TransactionService> options
+): BaseWebService<TransactionService>(options), ITransactionService {
+
    // GET a list of transactions of an account by accountId and time interval start to end
    public async Task<ResultData<IEnumerable<TransactionDto>?>> GetByAccountId(
       Guid accountId, 

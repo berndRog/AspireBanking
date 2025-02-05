@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 namespace BankingClient.Services;
 
 public class UserStateHolder(
-   AuthenticationStateProvider authenticationStateProvider,
    ILogger<UserStateHolder> logger
 ) {
 

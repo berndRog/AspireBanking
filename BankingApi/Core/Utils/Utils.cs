@@ -24,7 +24,7 @@ public static class Utils {
       random.Next(0, 1000).ToString("D4") + " ";
   
    public static string ToIso8601TzString(this DateTime dateTime, TimeZoneInfo tz) {
-      var formatString = "yyyy-MM-dd'T'HH:mm:sszzz"; 
+      //var formatString = "yyyy-MM-dd'T'HH:mm:sszzz"; 
       var dateTimeOffset = new DateTimeOffset(dateTime, tz.GetUtcOffset(dateTime));
       return dateTimeOffset.ToString("o");
    }

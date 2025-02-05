@@ -4,19 +4,9 @@ using BankingClient.Core.Dto;
 namespace BankingClient.Services;
 
 public class PersonService(
-   IHttpClientFactory httpClientFactory,
-   IConfiguration configuration,
-   JsonSerializerOptions jsonOptions,
-   CancellationTokenSource cancellationTokenSource,
-   ILogger<PersonService> logger
-) : BaseWebService<PersonService>(
-   httpClientFactory: httpClientFactory, 
-   configuration: configuration, 
-   jsonOptions: jsonOptions,
-   cancellationTokenSource: cancellationTokenSource,
-   logger: logger
-), IPersonService {
-
+   WebServiceOptions<PersonService> options
+): BaseWebService<PersonService>(options), IPersonService {
+   
    // GET  all persons
    public async Task<ResultData<IEnumerable<PersonDto>?>> GetAllPersons() =>
       await GetAllAsync<PersonDto>($"people");

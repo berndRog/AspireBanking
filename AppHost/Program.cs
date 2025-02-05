@@ -41,7 +41,7 @@ var keycloak = builder.AddKeycloak(name: "keycloak", port: 8080)
       .WaitFor(keycloak);
 
    // var bankingClient = builder.AddProject<Projects.BankingClient>("BankingClientSpa")
-   //    .WaitFor(bankingApi);
+   //     .WaitFor(bankingApi);
 
 
 builder.Build().Run();

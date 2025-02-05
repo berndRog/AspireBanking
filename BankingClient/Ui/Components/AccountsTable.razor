@@ -20,7 +20,7 @@
               <td>@account.Iban</td>
               <td>@account.Balance.ToString("C", CultureInfo.CurrentCulture)</td>
               <td>
-                <button class="btn btn-primary btn-sm" @onclick="() => OnOpenAccount.InvokeAsync(account.Iban)">
+                <button class="btn btn-primary btn-sm" @onclick="() => OnOpenAccount.InvokeAsync(account.Id)">
                   Konto öffnen
                 </button>
               </td>
@@ -38,5 +38,5 @@
 
 @code {
   [Parameter] public List<AccountDto>? Accounts { get; set; }
-  [Parameter] public EventCallback<string> OnOpenAccount { get; set; }
+  [Parameter] public EventCallback<Guid> OnOpenAccount { get; set; }
 }

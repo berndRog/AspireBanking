@@ -9,6 +9,7 @@ using BankingApi.Core.DomainModel.Entities;
 using BankingApi.Core.Dto;
 using BankingApi.Core.Misc;
 using BankingApi.Core.UseCases;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -28,6 +29,20 @@ public class
    ILogger<AccountsController> logger
 ) : ControllerBase {
    
+   
+   /// <summary>
+   /// Get all accounts 
+   /// </summary>
+   /// <returns>IEnumerable{OwnerDto?}</returns>
+   /// <response code="200">Ok: Owner with given id returned</response>
+   [HttpGet("accounts")]
+   [Authorize(Roles = "webtech-admin")]
+   [Produces(MediaTypeNames.Application.Json)]
+   [ProducesResponseType(StatusCodes.Status200OK)]
+   public async Task<ActionResult<AccountDto?>> GetAccounts() {
+      var accounts = await accountsRepository.SelectAsync();
+      return Ok(mapper.Map<IEnumerable<AccountDto>>(accounts));
+   }
    
    /// <summary>
    /// Get all accounts of a given ownerId

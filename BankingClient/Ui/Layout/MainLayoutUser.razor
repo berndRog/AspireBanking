@@ -2,8 +2,7 @@
 @inherits LayoutComponentBase
 @inject ILogger<App> Logger
 
-
-<div class="container px-0 main-container">
+<div class="container px-0 main-container-user">
   <div class="row">
     <!-- Header -->
     <Header> </Header>
@@ -30,7 +29,7 @@
 </div>
 
 <style>
-  .main-container {
+  .main-container-user {
     max-width: 1200px; /* Set your max-width */
     margin-left: 0; /* no margin left */
     /*margin-right: auto; !* Center the container *!*/
@@ -40,6 +39,6 @@
 @code {
   private int Year => DateTime.Now.Year;
   protected override void OnInitialized() {
-    Logger.LogInformation("MainLayout.OnInitialized()");
+    Logger.LogInformation("MainLayoutUser.OnInitialized()");
   }
 }

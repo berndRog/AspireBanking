@@ -4,7 +4,6 @@ using System.IdentityModel.Tokens.Jwt;
 using System.IO;
 using System.Linq;
 using System.Security.Claims;
-using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
@@ -12,12 +11,10 @@ using Asp.Versioning;
 using Asp.Versioning.ApiExplorer;
 using BankingApi.Core.Misc;
 using BankingApi.Di;
-using BankingClient.Utils;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.HttpLogging;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -50,7 +47,7 @@ public class Program {
       // add http logging 
       builder.Services.AddHttpLogging(opts =>
          opts.LoggingFields = HttpLoggingFields.All);
-
+      
       // add core
       builder.Services.AddCore();
 
@@ -59,7 +56,7 @@ public class Program {
 
       // add Error handling
       builder.Services.AddProblemDetails();
-
+      
       // add Keycloak Authentication and Authorization
       AddKeycloakAuthenticationAndAuthorization(builder);
 
@@ -114,6 +111,7 @@ public class Program {
       
       // 6) Controllers
       app.MapControllers();
+      
       app.Run();
    }
 
@@ -312,6 +310,7 @@ public class Program {
       //    });
       //});
    }
+
    
    /// <summary>
    /// Use Swagger Middleware

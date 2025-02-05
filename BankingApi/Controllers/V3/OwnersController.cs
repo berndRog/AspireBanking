@@ -28,17 +28,6 @@ public class OwnersController(
 ): ControllerBase {
 
    #region endpoint methods
-   
-   
-   [HttpGet("owners/exists")]
-   public async Task<IActionResult> ResourceExists(
-      [FromQuery] string userName
-   ) {
-      var exists = await ownersRepository.ExistsByUserNameAsync(userName);
-      return Ok(exists);
-   }
-   
-   
    /// <summary>
    /// Get all owners 
    /// </summary>
@@ -77,6 +66,20 @@ public class OwnersController(
       };
    }
 
+   /// <summary>
+   /// Exists an owner for the given UserName
+   /// </summary>
+   /// <param name="userName"></param>
+   /// <returns></returns>
+   [HttpGet("owners/exists")]
+   public async Task<IActionResult> ResourceExists(
+      [FromQuery] string userName
+   ) {
+      var exists = await ownersRepository.ExistsByUserNameAsync(userName);
+      return Ok(exists);
+   }
+
+   
    /// <summary>
    /// Get an owner by UserName
    /// </summary>

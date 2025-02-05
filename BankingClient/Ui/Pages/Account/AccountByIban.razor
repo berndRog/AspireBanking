@@ -1,15 +1,11 @@
 @page "/accounts/iban/{Iban}"
-@using System.Globalization
 @using BankingClient.Ui.Components
-@using BankingClient.Ui.Layout
-@layout MainLayout
 
 <div class="container mt-3">
   @if (!string.IsNullOrEmpty(_errorMessage)) {
     <div class="alert alert-danger">@_errorMessage</div>
   }
-
-
+  
   <div class="row">
     <!-- Kontoinhaber Card -->
     <div class="col-12 mb-3 me-md-3">

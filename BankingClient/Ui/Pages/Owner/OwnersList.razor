@@ -1,18 +1,15 @@
 @page "/owners"
 @using Microsoft.AspNetCore.Authorization
-
-@attribute [Authorize(Policy = "CombinedPolicy")]
-<div class="container mt-3">
+@using BankingClient.Ui.Components
+@attribute [Authorize(Policy = "AdminPolicy")]
+<div class="container-fluid mt-3">
   @if (!string.IsNullOrEmpty(_errorMessage)) {
     <div class="alert alert-danger">@_errorMessage</div>
   }
 
-
   <div class="row">
-    <!-- Kontoinhaber Card -->
-    <div class="col-12 mb-3 me-md-3">
-      <!-- reuse Blazor Component -->
-      <OwnersList Owners="@_ownerDtos"/>
+    <div class="col-12 mx-1">
+      <OwnersTable Owners="@_ownerDtos" OnOpenOwner="@(ownerId => OpenOwner(ownerId))" />
     </div>
   </div>
 </div>

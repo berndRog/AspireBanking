@@ -61,7 +61,7 @@ public partial class Token(
           }
         }
         // navigate to the admin or user page
-        await NavigateAuthenticatedUser();
+        // await NavigateAuthenticatedUser();
         
       } // if result.TryGetToken
       else {

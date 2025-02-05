@@ -126,14 +126,4 @@ public class UserStateHolder(
       
       logger.LogInformation("UserStateHolder: UpdateOwnerDto{1}", OwnerDto);
    }
-   
-   // AccountDto --------------------------------------------------------------------------
-   private AccountDto? _accountDto = null;
-   public AccountDto? AccountDto {
-      get => _accountDto;
-      set {
-         logger.LogInformation("UserStateHolder: AccountDto{1}", value);
-         _accountDto = value;
-      }
-   }
 }

@@ -2,26 +2,25 @@ using BankingClient.Core;
 using BankingClient.Core.Dto;
 using BankingClient.Services;
 using Microsoft.AspNetCore.Components;
-namespace BankingClient.Ui.Pages.Accounts;
+namespace BankingClient.Ui.Pages.Account;
 
-public partial class AccountDetail(
+public partial class AccountById(
    IAccountService accountService,
    IBeneficiaryService beneficiaryService,
    UserStateHolder userStateHolder,
    NavigationManager navigationManager,
-   ILogger<AccountDetail> logger
-) {
-   [Parameter] public required string Iban { get; set; }
+   ILogger<AccountByIban> logger
+): ComponentBase {
+   [Parameter] public required Guid Id { get; set; }
 
    private OwnerDto? _ownerDto = null;
    private AccountDto? _accountDto = null;
-   private List<AccountDto> _accountDtos = [];
-   private List<BeneficiaryDto>? _beneficiaryDtos = null;
+   private List<BeneficiaryDto> _beneficiaryDtos = [];
    private string? _errorMessage = null;
 
    protected override async Task OnInitializedAsync() {
       
-      logger.LogInformation("AccountDetail: OnInitializedAsync Iban: {1}",Iban);
+      logger.LogInformation("AccountbyId: OnInitializedAsync Id: {1}",Id);
       if (!userStateHolder.IsAuthenticated) {
          _errorMessage = "Kontoinhaber ist nicht angemeldet!";
          return;
@@ -32,31 +31,29 @@ public partial class AccountDetail(
       }
       _ownerDto = userStateHolder.OwnerDto!;
       
-      var resultAccount = await accountService.GetByIban(Iban);
+      var resultAccount = await accountService.GetById(Id);
       switch (resultAccount) {
          case ResultData<AccountDto?>.Success sucess:
             logger.LogInformation("AccountDetail: GetByIban: {1}", sucess.Data);
             _accountDto = sucess.Data!;
-            userStateHolder.AccountDto = _accountDto;
-            _accountDtos.Add(_accountDto);
             break;
          case ResultData<AccountDto?>.Error error:
             _errorMessage = error.Exception.Message;
             return;
       }
+      
+      var resultBeneficiaries = await beneficiaryService.GetAllBeneficiariesByAccount(_accountDto!.Id);
+      switch (resultBeneficiaries) {
+         case ResultData<IEnumerable<BeneficiaryDto>?>.Success sucess:
+            logger.LogInformation("AccountDetail: GetBeneficiariesByAccountId: {1}", sucess.Data);
+            _beneficiaryDtos = sucess.Data!.ToList();
+            break;
+         case ResultData<IEnumerable<BeneficiaryDto>?>.Error error:
+            _errorMessage = error.Exception.Message;
+            return;
+      }
    }
    
-   private void HandleTransfers() {
-      logger.LogInformation("AccountDetail: HandleTransfers navigate to /accounts/{1}/transfers/create", _accountDto!.Id);
-      navigationManager.NavigateTo($"/accounts/{_accountDto!.Id}/transfers/create");
-   }
-   
-   private void HandleTransactions() {
-      logger.LogInformation("AccountDetail: HandleTransactions navigate to /accounts/{1}/transactions/create", _accountDto!.Id);
-      navigationManager.NavigateTo($"/accounts/{_accountDto!.Id}/transctions/create");
-   }
-
-
    private void LeaveForm() {
       navigationManager.NavigateTo("/home");
    }

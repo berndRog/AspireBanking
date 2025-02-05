@@ -25,28 +25,19 @@
 
   <ItemGroup>
     <AdditionalFiles Include="Ui\Components\AccountCard.razor" />
-    <AdditionalFiles Include="Ui\Components\AccountList.razor" />
-    <AdditionalFiles Include="Ui\Components\BeneficiariesList.razor" />
     <AdditionalFiles Include="Ui\Components\OwnerCard.razor" />
     <AdditionalFiles Include="Ui\Layout\Footer.razor" />
     <AdditionalFiles Include="Ui\Layout\Header.razor" />
-    <AdditionalFiles Include="Ui\Layout\MainLayout.razor" />
     <AdditionalFiles Include="Ui\Layout\NavColMenu.razor" />
     <AdditionalFiles Include="Ui\Layout\NavRowMenu.razor" />
-    <AdditionalFiles Include="Ui\Pages\Accounts\AccountDetail.razor" />
     <AdditionalFiles Include="Ui\Pages\App.razor" />
     <AdditionalFiles Include="Ui\Pages\Authentication.razor" />
     <AdditionalFiles Include="Ui\Pages\Home.razor" />
     <AdditionalFiles Include="Ui\Pages\LoginDisplay.razor" />
     <AdditionalFiles Include="Ui\Pages\Owner\OwnerDetail.razor" />
-    <AdditionalFiles Include="Ui\Pages\Owner\OwnersList.razor" />
     <AdditionalFiles Include="Ui\Pages\RedirectToLogin.razor" />
     <AdditionalFiles Include="Ui\Pages\Token.razor" />
     <AdditionalFiles Include="Ui\Pages\Transfer\TransferCreate.razor" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Ui\" />
   </ItemGroup>
 
   <ItemGroup>

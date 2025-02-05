@@ -1,27 +1,22 @@
-// BeneficiaryCreate.razor: Input form for a beneficiary
-@page "/beneficiaries/create"
-@using Microsoft.AspNetCore.Components.Forms
-@using BankingClient.Ui.Layout
+@page "/accounts/{accountid:guid}/beneficiaries/create"
 @using BankingClient.Ui.Components
-@layout MainLayout
 
-<div class="d-flex justify-content-left">
-  <div class="card shadow-sm" style="width: 32rem;">
-    <div class="card-body">
-      <h5 class="card-title">Überweisungsempfänger hinzufügen</h5>
+<div class="container">
+  <div class="row">
+    <div class="col-md-6 offset-md-1">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <h5 class="card-title">Überweisungsempfänger hinzufügen</h5>
+          @if (!string.IsNullOrEmpty(_errorMessage)) {
+            <div class="alert alert-danger">@_errorMessage</div>
+          }
 
-      @if (!string.IsNullOrEmpty(_errorMessage)) {
-        <div class="alert alert-danger">@_errorMessage</div>
-      }
+          <InputField Id="firstname" Label="Vorname" Placeholder="Vorname" @bind-Value="_beneficiaryCreate.FirstName" />
+          <InputField Id="lastname" Label="Nachname" Placeholder="Nachname" @bind-Value="_beneficiaryCreate.LastName" />
+          <InputField Id="iban" Label="IBAN" Placeholder="IBAN" @bind-Value="_beneficiaryCreate.Iban" />
 
-      <InputField Id="firstname" Label="Vorname" Placeholder="Vorname" @bind-Value="_beneficiaryCreate.Firstname" />
-      <InputField Id="lastname" Label="Nachname" Placeholder="Nachname" @bind-Value="_beneficiaryCreate.Lastname" />
-      <InputField Id="iban" Label="IBAN" Placeholder="IBAN" @bind-Value="_beneficiaryCreate.Iban" />
-
-      <div class="d-grid gap-2 mt-3">
-        <button type="submit" class="btn btn-primary" @onclick="HandleSubmit">Senden</button>
-        <button type="button" class="btn btn-secondary" @onclick="LeaveForm">Zurück</button>
-        <button type="button" class="btn btn-danger" @onclick="CancelOperation">Abbrechen</button>
+          <ButtonsSubmitLeaveCancel OnSubmit="HandleSubmit" OnLeave="LeaveForm" OnCancel="CancelOperation" />
+        </div>
       </div>
     </div>
   </div>

@@ -10,7 +10,7 @@ public partial class OwnerDetail(
    UserStateHolder userStateHolder,
    NavigationManager navigationManager,
    ILogger<OwnerDetail> logger
-) {
+): ComponentBase {
    [Parameter] public Guid Id { get; set; }
 
    private OwnerDto? _ownerDto;
@@ -51,9 +51,10 @@ public partial class OwnerDetail(
       }
    }
 
-   private void OpenAccount(string accountIban) {
-      logger.LogInformation("OwnerDetail: nav: /accounts/iban/{1}", accountIban);
-      navigationManager.NavigateTo($"/accounts/iban/{accountIban}");
+   private void OpenAccount(Guid accountId) {
+      var iban = _accountDtos.FirstOrDefault(a => a.Id == accountId)?.Iban;
+      logger.LogInformation("OwnerDetail: nav: /accounts/iban/{1}", iban);
+      navigationManager.NavigateTo($"/accounts/iban/{iban}");
    }
    
    private void LeaveForm() {

@@ -2,7 +2,7 @@ using System.Globalization;
 using System.Text.Json;
 using BankingClient.Core;
 using BankingClient.Services;
-using BankingClient.Ui.Pages;
+using BankingClient.Ui;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;

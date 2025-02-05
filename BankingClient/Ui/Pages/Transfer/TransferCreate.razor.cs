@@ -13,7 +13,7 @@ public partial class TransferCreate(
    UserStateHolder userStateHolder,
    NavigationManager navigationManager,
    ILogger<TransferCreate> logger
-) {
+): ComponentBase {
 
    [Parameter] public required Guid AccountId { get; set; }
 
@@ -32,19 +32,17 @@ public partial class TransferCreate(
          return;
       }
       _ownerDto = userStateHolder.OwnerDto!;
-      _accountDto = userStateHolder.AccountDto;
-      if (AccountId != _accountDto?.Id) {
-         var resultAccount = await accountService.GetById(AccountId);
-         switch (resultAccount) {
-            case ResultData<AccountDto?>.Success sucess:
-               logger.LogInformation("TransferCreate: GetAccountById: {1}", sucess.Data);
-               _accountDto = sucess.Data!;
-               break;
-            case ResultData<AccountDto?>.Error error:
-               _errorMessage = error.Exception.Message;
-               return;
-         }  
-      }
+
+      var resultAccount = await accountService.GetById(AccountId);
+      switch (resultAccount) {
+         case ResultData<AccountDto?>.Success sucess:
+            logger.LogInformation("TransferCreate: GetAccountById: {1}", sucess.Data);
+            _accountDto = sucess.Data!;
+            break;
+         case ResultData<AccountDto?>.Error error:
+            _errorMessage = error.Exception.Message;
+            return;
+      }  
       
       var resultBeneficiaries = await beneficiaryService.GetAllBeneficiariesByAccount(_accountDto!.Id);
       switch (resultBeneficiaries) {
@@ -64,4 +62,8 @@ public partial class TransferCreate(
       //    navigationManager.NavigateTo($"/accounts/iban/{accountIban}");
    }
 
+   private void CreateBeneficiary() {
+      logger.LogInformation("AccountDetail: nav: /accounts/{1}/beneficiaries/create", _accountDto!.Id);
+      navigationManager.NavigateTo($"/accounts/{_accountDto!.Id}/beneficiaries/create");
+   }
 }

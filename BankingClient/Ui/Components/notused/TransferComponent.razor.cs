@@ -2,7 +2,7 @@ using BankingClient.Core;
 using BankingClient.Core.Dto;
 using BankingClient.Services;
 using Microsoft.AspNetCore.Components;
-namespace BankingClient.Ui.Pages.notused;
+namespace BankingClient.Ui.Components.notused;
 
 public partial class TransferComponent(
     ITransferService transferService,

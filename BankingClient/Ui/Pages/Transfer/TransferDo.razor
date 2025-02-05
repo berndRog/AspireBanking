@@ -1,0 +1,10 @@
+@page "/accounts/{accountId:guid}/transfers/do{id:guid}"
+
+<div class="container mt-3">
+  @if (!string.IsNullOrEmpty(_errorMessage)) {
+    <div class="alert alert-danger">@_errorMessage</div>
+  }
+
+  
+
+</div>

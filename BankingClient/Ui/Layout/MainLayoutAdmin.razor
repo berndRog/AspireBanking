@@ -1,0 +1,45 @@
+﻿@using BankingClient.Ui.Pages
+@inherits LayoutComponentBase
+@inject ILogger<App> Logger
+
+
+<div class="container px-0 main-container-admin">
+  <div class="row">
+    <!-- Header -->
+    <Header> </Header>
+  </div>
+
+  <div class="row">
+    <!-- Sidebar / Navigation -->
+    @* <NavColMenu/>  *@
+    <NavRowMenu/>
+    
+    <LoginDisplay/>
+    
+    <!-- Main Content Area -->
+    @*<main class="col-12 col-md-9 col-lg-10">*@
+    <main class="col-12">
+      @Body
+    </main>
+  </div>
+
+  <div class="row">
+    <!-- Footer -->
+    <Footer> </Footer>
+  </div>
+</div>
+
+<style>
+  .main-container-admin {
+    max-width: 100%; /* Set your max-width */
+    margin-left: 0;  /* no margin left */
+    /*margin-right: auto; !* Center the container *!*/
+  }
+</style>
+
+@code {
+  private int Year => DateTime.Now.Year;
+  protected override void OnInitialized() {
+    Logger.LogInformation("MainLayoutUser.OnInitialized()");
+  }
+}

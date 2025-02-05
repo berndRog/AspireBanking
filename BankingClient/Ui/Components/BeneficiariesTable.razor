@@ -1,4 +1,3 @@
-@using System.Globalization
 @using BankingClient.Core.Dto
 <div class="card shadow-sm w-100">
   <div class="card-body">
@@ -36,14 +35,10 @@
       <p>Keine Empfänger verfügbar.</p>
     }
   </div>
-
-  <!-- Button placed outside the card -->
-  <button class="btn btn-primary w-25 mx-2 mb-2  " >
-    Neuer Empfänger
-  </button>
 </div>
 
 @code {
   [Parameter] public List<BeneficiaryDto>? Beneficiaries { get; set; }
   [Parameter] public EventCallback<Guid> OnOpenBeneficiary { get; set; }
+  [Parameter] public EventCallback<Guid> OnCreateBeneficiary { get; set; }
 }

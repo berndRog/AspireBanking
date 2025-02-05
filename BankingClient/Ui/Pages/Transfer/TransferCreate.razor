@@ -1,8 +1,5 @@
 @page "/accounts/{accountId:guid}/transfers/create"
 @using BankingClient.Ui.Components
-@using BankingClient.Ui.Layout
-@using Microsoft.AspNetCore.Authorization
-@layout MainLayout
 
 <div class="container mt-3">
   @if (!string.IsNullOrEmpty(_errorMessage)) {
@@ -19,7 +16,12 @@
   </div>
 
   <div class="col-12 mb-3">
-    <BeneficiariesList Beneficiaries="_beneficiaryDtos" OnOpenBeneficiary="OpenBeneficiary"/>
+    <BeneficiariesTable Beneficiaries="_beneficiaryDtos" OnOpenBeneficiary="OpenBeneficiary" />
   </div>
+
+  <!-- Button placed outside the card -->
+  <button class="btn btn-primary w-25 mx-2 mb-2"  @onclick="CreateBeneficiary"> >
+    Neuer Empfänger
+  </button>
 
 </div>

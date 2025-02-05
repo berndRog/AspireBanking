@@ -1,0 +1,174 @@
+﻿@using BankingClient.Ui.Layout
+@using Microsoft.AspNetCore.Authorization
+@inject NavigationManager Navigation
+@inject AuthenticationStateProvider AuthenticationProvider
+@inject IAuthorizationService AuthorizationService
+@inject ILogger<App> Logger
+
+<CascadingAuthenticationState>
+  <Router AppAssembly="@typeof(App).Assembly">
+    <Found Context="routeData">
+      <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@_layoutType">
+        <NotAuthorized>
+          @if (context.User.Identity?.IsAuthenticated != true) {
+            Logger.LogInformation("App: Redirecting to /authentication/login");
+            <RedirectToLogin/>
+          }
+          else {
+            <p role="alert">You are not authorized to access this resource.</p>
+          }
+        </NotAuthorized>
+      </AuthorizeRouteView>
+      <FocusOnNavigate RouteData="@routeData" Selector="h1"/>
+    </Found>
+    <NotFound>
+      <PageTitle>Not found</PageTitle>
+      <LayoutView Layout="@_layoutType">
+        <p role="alert">Sorry, there's nothing at this address.</p>
+      </LayoutView>
+    </NotFound>
+  </Router>
+</CascadingAuthenticationState>
+
+@code {
+  private Type _layoutType = typeof(MainLayoutUser); // Default layout for unauthenticated users
+  private bool _isEventSubscribed;
+  private bool _isNavigatedToToken = false; // Prevent duplicate navigation
+
+  protected override async Task OnInitializedAsync() {
+    await UpdateLayoutBasedOnAuthState();
+  }
+
+  protected override async Task OnAfterRenderAsync(bool firstRender) {
+    if (firstRender) {
+      if (!_isEventSubscribed) {
+        Logger.LogInformation("App: Subscribing to AuthenticationStateChanged event");
+        AuthenticationProvider.AuthenticationStateChanged += OnAuthenticationStateChanged;
+        _isEventSubscribed = true;
+      }
+      // Initial authentication check to navigate if already authenticated
+      await HandleAuthenticationNavigation();
+    }
+  }
+
+  private void OnAuthenticationStateChanged(Task<AuthenticationState> task) {
+    Logger.LogInformation("App: Authentication state changed, updating layout.");
+    task.ContinueWith(async t => {
+      await UpdateLayoutBasedOnAuthState();
+    });
+  }
+
+  private async Task UpdateLayoutBasedOnAuthState() {
+    var authState = await AuthenticationProvider.GetAuthenticationStateAsync();
+    var user = authState.User;
+
+    if (user.Identity is { IsAuthenticated: true }) {
+      Logger.LogInformation("App: User is authenticated, checking role");
+      
+      if ((await AuthorizationService.AuthorizeAsync(user, "AdminPolicy")).Succeeded) {
+        Logger.LogInformation("App: User is in AdminPolicy");
+        _layoutType = typeof(MainLayoutAdmin);
+      }
+      else if ((await AuthorizationService.AuthorizeAsync(user, "UserPolicy")).Succeeded) {
+        Logger.LogInformation("App: User is in UserPolicy");
+        _layoutType = typeof(MainLayoutUser);
+      }
+      // Navigate to /token after authentication check
+      await HandleAuthenticationNavigation();
+    }
+    else {
+      Logger.LogInformation("App: User is not authenticated, using default layout");
+      _layoutType = typeof(MainLayoutUser);
+    }
+
+    Logger.LogInformation($"App: Using layout {_layoutType.Name}");
+    StateHasChanged(); // Ensure UI updates dynamically
+  }
+
+  private async Task HandleAuthenticationNavigation() {
+    var authState = await AuthenticationProvider.GetAuthenticationStateAsync();
+    if (authState.User.Identity is { IsAuthenticated: true } && !_isNavigatedToToken) {
+      _isNavigatedToToken = true; // Prevent redundant navigation
+      Logger.LogInformation("App: User is authenticated, redirecting to /token");
+      Navigation.NavigateTo("/token");
+    }
+  }
+  
+  public void Dispose() {
+    if (!_isEventSubscribed) return;
+    Logger.LogInformation("App: Unsubscribing from AuthenticationStateChanged event");
+    AuthenticationProvider.AuthenticationStateChanged -= OnAuthenticationStateChanged;
+    _isEventSubscribed = false;
+  }
+}
+
+
+
+@* @using BankingClient.Ui.Layout *@
+@* @inject NavigationManager Navigation *@
+@* @inject AuthenticationStateProvider AuthenticationProvider *@
+@* @inject ILogger<App> Logger *@
+@* *@
+@* <CascadingAuthenticationState> *@
+@*   <Router AppAssembly="@typeof(App).Assembly"> *@
+@*     <Found Context="routeData"> *@
+@*       <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayoutUser)"> *@
+@*         <NotAuthorized> *@
+@*           @if (context.User.Identity?.IsAuthenticated != true) { *@
+@*             @if(true) Logger.LogInformation("App: Redirecting to /authentication/login"); *@
+@*             <RedirectToLogin/> *@
+@*           } *@
+@*           else { *@
+@*             <p role="alert">You are not authorized to access this resource.</p> *@
+@*           } *@
+@*         </NotAuthorized> *@
+@*       </AuthorizeRouteView> *@
+@*       <FocusOnNavigate RouteData="@routeData" Selector="h1"/> *@
+@*     </Found> *@
+@*     <NotFound> *@
+@*       <PageTitle>Not found</PageTitle> *@
+@*       <LayoutView Layout="@typeof(MainLayoutUser)"> *@
+@*         <p role="alert">Sorry, there's nothing at this address.</p> *@
+@*       </LayoutView> *@
+@*     </NotFound> *@
+@*   </Router> *@
+@* </CascadingAuthenticationState> *@
+@* *@
+@* @code { *@
+@*   private bool _isEventSubscribed; *@
+@* *@
+@*   protected override async Task OnAfterRenderAsync(bool firstRender) { *@
+@*     if (firstRender) { *@
+@*       if (!_isEventSubscribed) { *@
+@*         Logger.LogInformation("App: Subscribing to AuthenticationStateChanged event"); *@
+@*         AuthenticationProvider.AuthenticationStateChanged += OnAuthenticationStateChanged; *@
+@*         _isEventSubscribed = true; *@
+@*       } *@
+@* *@
+@*       // Initial authentication state check *@
+@*       Logger.LogInformation("App: Initial authentication state check"); *@
+@*       var authState = await AuthenticationProvider.GetAuthenticationStateAsync(); *@
+@*       if (authState.User.Identity is { IsAuthenticated: true }) { *@
+@*         Logger.LogInformation("App: User is authenticated, redirecting to /token"); *@
+@*         Navigation.NavigateTo("/token"); *@
+@*       } *@
+@*     } *@
+@*   } *@
+@* *@
+@*   private void OnAuthenticationStateChanged(Task<AuthenticationState> task) { *@
+@*     Logger.LogInformation("App: Handle authentication state changed"); *@
+@*     task.ContinueWith(async t => { *@
+@*       var authState = await t; *@
+@*       if (authState.User.Identity is { IsAuthenticated: true }) { *@
+@*         Navigation.NavigateTo("/token"); *@
+@*       } *@
+@*     }); *@
+@*   } *@
+@* *@
+@*   public void Dispose() { *@
+@*     if (!_isEventSubscribed) return; *@
+@*     Logger.LogInformation("App: Unsubscribing from AuthenticationStateChanged event"); *@
+@*     AuthenticationProvider.AuthenticationStateChanged -= OnAuthenticationStateChanged; *@
+@*     _isEventSubscribed = false; *@
+@*   } *@
+@* } *@

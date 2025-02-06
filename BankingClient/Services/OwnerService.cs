@@ -22,6 +22,10 @@ public class OwnerService(
    [Authorize(Policy = "CombinedPolicy")]
    public async Task<ResultData<OwnerDto?>> GetByUserName(string userName) =>
       await GetAsync<OwnerDto>($"owners/username/?username={userName}");
+
+   // Get owner by name
+   public async Task<ResultData<IEnumerable<OwnerDto>?>> GetByName(string name) =>
+      await GetAsync<IEnumerable<OwnerDto>>($"owners/name/?name={name}");
    
    // Get owner by userId
    [Authorize(Policy = "CombinedPolicy")]

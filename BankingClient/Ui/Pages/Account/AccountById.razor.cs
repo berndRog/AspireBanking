@@ -42,7 +42,7 @@ public partial class AccountById(
             return;
       }
       
-      var resultBeneficiaries = await beneficiaryService.GetAllBeneficiariesByAccount(_accountDto!.Id);
+      var resultBeneficiaries = await beneficiaryService.GetByAccount(_accountDto!.Id);
       switch (resultBeneficiaries) {
          case ResultData<IEnumerable<BeneficiaryDto>?>.Success sucess:
             logger.LogInformation("AccountDetail: GetBeneficiariesByAccountId: {1}", sucess.Data);

@@ -1,7 +1,7 @@
 @using BankingClient.Core.Dto
 <div class="card shadow-sm w-100">
   <div class="card-body">
-    <h6 class="card-title">Überweisungsempfänger</h6>
+    <h6 class="card-title">Zahlungsempfänger</h6>
 
     @if (Beneficiaries?.Any() == true) {
       <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
@@ -21,8 +21,8 @@
               <td>@beneficiary.LastName</td>
               <td>@beneficiary.Iban</td>
               <td>
-                <button class="btn btn-primary btn-sm" @onclick="() => OnOpenBeneficiary.InvokeAsync(beneficiary.Id)">
-                  Empfänger öffnen
+                <button class="btn btn-primary btn-sm" @onclick="() => OnOpenButton.InvokeAsync(beneficiary.Id)">
+                  @ButtonText
                 </button>
               </td>
             </tr>
@@ -38,7 +38,8 @@
 </div>
 
 @code {
+  [Parameter] public string ButtonText { get; set; } = "Überweisen";
   [Parameter] public List<BeneficiaryDto>? Beneficiaries { get; set; }
-  [Parameter] public EventCallback<Guid> OnOpenBeneficiary { get; set; }
+  [Parameter] public EventCallback<Guid> OnOpenButton { get; set; }
   [Parameter] public EventCallback<Guid> OnCreateBeneficiary { get; set; }
 }

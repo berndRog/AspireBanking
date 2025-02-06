@@ -52,7 +52,7 @@ public partial class OwnerDetail(
    }
 
    private void OpenAccount(Guid accountId) {
-      var iban = _accountDtos.FirstOrDefault(a => a.Id == accountId)?.Iban;
+      var iban = _accountDtos?.FirstOrDefault(a => a.Id == accountId)?.Iban;
       logger.LogInformation("OwnerDetail: nav: /accounts/iban/{1}", iban);
       navigationManager.NavigateTo($"/accounts/iban/{iban}");
    }

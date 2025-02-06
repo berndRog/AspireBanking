@@ -8,7 +8,7 @@ public record OwnerDto(
    string FirstName,
    string LastName,
    string? Email,
-   string? UserName,  
+   string UserName,  
    string? UserId,
    string? UserRole
 );

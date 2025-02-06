@@ -69,7 +69,7 @@ public class TransfersController(
    /// <summary>
    /// Create a transfer and the two transactions (debit/credit)
    /// </summary>
-   /// <param name="accountId"></param>
+   /// <param name="accountId">sender</param>
    /// <param name="transferDto"></param>
    /// <returns>TransferDto</returns>
    /// <response code="201">Created: Transfer is created</response>
@@ -82,7 +82,7 @@ public class TransfersController(
    [ProducesResponseType(typeof(string), StatusCodes.Status409Conflict)]
    [ProducesDefaultResponseType]
    public async Task<ActionResult<TransferDto>> SendMoney(
-      [FromRoute] Guid accountId,
+      [FromRoute] Guid accountId,  // sender
       [FromBody] TransferDto transferDto
    ){
       logger.LogDebug("SendMoney");

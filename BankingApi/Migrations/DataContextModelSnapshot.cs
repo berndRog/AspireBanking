@@ -91,9 +91,6 @@ namespace BankingApi.Migrations
                     b.Property<string>("UserName")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("UserRole")
-                        .HasColumnType("TEXT");
-
                     b.HasKey("Id");
 
                     b.ToTable("Owners");

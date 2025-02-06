@@ -11,7 +11,6 @@ public class Owner: AEntity {
    public string? Email { get; set; } = string.Empty;
    public string? UserName { get; set; } = null;
    public string? UserId { get; set; } = null;
-   public string? UserRole { get; set; } = null;
    
    // Navigation-Property Owner --> Account [0..*]  
    public IList<Account> Accounts { get; } = new List<Account>();
@@ -24,7 +23,6 @@ public class Owner: AEntity {
       if(updOwner.Email != null) Email = updOwner.Email;
       if(updOwner.UserName != null) UserName = updOwner.UserName;
       if(updOwner.UserId != null) UserId = updOwner.UserId;
-      if(updOwner.UserRole != null) UserRole = updOwner.UserRole;
    } 
    
    public void Add(Account account) {

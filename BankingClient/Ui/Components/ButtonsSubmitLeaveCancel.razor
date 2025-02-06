@@ -1,8 +1,8 @@
 <div class="d-flex justify-content-center mt-3">
   <div class="btn-group w-100" role="group">
-    <button type="submit" class="btn btn-primary flex-fill mx-1" @onclick="OnSubmit">Senden</button>
-    <button type="button" class="btn btn-secondary flex-fill mx-1" @onclick="OnLeave">Zurück</button>
-    <button type="button" class="btn btn-danger flex-fill mx-1" @onclick="OnCancel">Abbrechen</button>
+    <button type="submit" class="btn btn-primary flex-fill mx-1" @onclick="() => OnSubmit.InvokeAsync()">Senden</button>
+    <button type="button" class="btn btn-secondary flex-fill mx-1" @onclick="() => OnLeave.InvokeAsync()">Zurück</button>
+    <button type="button" class="btn btn-danger flex-fill mx-1" @onclick="() => OnCancel.InvokeAsync()">Abbrechen</button>
   </div>
 </div>
 

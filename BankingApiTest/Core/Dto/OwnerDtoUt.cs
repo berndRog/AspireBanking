@@ -27,8 +27,7 @@ public class OwnerDtoUt {
          LastName: _seed.Owner1.LastName,
          Email: _seed.Owner1.Email,
          UserName: null,
-         UserId: null,
-         UserRole: null
+         UserId: null
       );
       // Assert
       actual.Should().NotBeNull();

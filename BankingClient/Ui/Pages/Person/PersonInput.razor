@@ -12,10 +12,10 @@
         <div class="alert alert-danger">@_errorMessage</div>
       }
 
-      <InputField Id="firstname" Label="Vorname" Placeholder="Vorname" @bind-Value="_personCreate.Firstname" />
-      <InputField Id="lastname" Label="Nachname" Placeholder="Nachname" @bind-Value="_personCreate.Lastname" />
-      <InputField Id="email" Type="email" Label="E-Mail" Placeholder="name@example.com" @bind-Value="_personCreate.Email" />
-      <InputField Id="phone" Label="Telefon" Placeholder="Telefon" @bind-Value="_personCreate.Phone" />
+      <InputFieldString Id="firstname" Label="Vorname" Placeholder="Vorname" @bind-Value="_personCreate.Firstname" />
+      <InputFieldString Id="lastname" Label="Nachname" Placeholder="Nachname" @bind-Value="_personCreate.Lastname" />
+      <InputFieldString Id="email" Type="email" Label="E-Mail" Placeholder="name@example.com" @bind-Value="_personCreate.Email" />
+      <InputFieldString Id="phone" Label="Telefon" Placeholder="Telefon" @bind-Value="_personCreate.Phone" />
 
       <div class="mb-3">
         <label class="form-label">Profilbild</label>
@@ -33,9 +33,9 @@
 
       <hr/>
 
-      <InputField Id="userName" Label="Nutzername" Placeholder="Nutzername" @bind-Value="_personCreate.Username" />
-      <InputField Id="password" Type="password" Label="Passwort" Placeholder="Passwort" @bind-Value="_personCreate.Password" />
-      <InputField Id="confirmPassword" Type="password" Label="Passwort bestätigen" Placeholder="Passwort bestätigen" @bind-Value="_personCreate.ConfirmedPassword" />
+      <InputFieldString Id="userName" Label="Nutzername" Placeholder="Nutzername" @bind-Value="_personCreate.Username" />
+      <InputFieldString Id="password" Type="password" Label="Passwort" Placeholder="Passwort" @bind-Value="_personCreate.Password" />
+      <InputFieldString Id="confirmPassword" Type="password" Label="Passwort bestätigen" Placeholder="Passwort bestätigen" @bind-Value="_personCreate.ConfirmedPassword" />
 
       <div class="d-grid gap-2 mt-3">
         <button type="submit" class="btn btn-primary" @onclick="HandleSubmit">Senden</button>

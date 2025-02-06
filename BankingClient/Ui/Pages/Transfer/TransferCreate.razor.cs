@@ -8,7 +8,6 @@ namespace BankingClient.Ui.Pages.Transfer;
 public partial class TransferCreate(
    IAccountService accountService,
    IBeneficiaryService beneficiaryService,
-   ITransactionService transactionService,
    ITransferService transferService,
    UserStateHolder userStateHolder,
    NavigationManager navigationManager,
@@ -33,8 +32,7 @@ public partial class TransferCreate(
       }
       _ownerDto = userStateHolder.OwnerDto!;
 
-      var resultAccount = await accountService.GetById(AccountId);
-      switch (resultAccount) {
+      switch (await accountService.GetById(AccountId)) {
          case ResultData<AccountDto?>.Success sucess:
             logger.LogInformation("TransferCreate: GetAccountById: {1}", sucess.Data);
             _accountDto = sucess.Data!;
@@ -43,12 +41,10 @@ public partial class TransferCreate(
             _errorMessage = error.Exception.Message;
             return;
       }  
-      
-      var resultBeneficiaries = await beneficiaryService.GetAllBeneficiariesByAccount(_accountDto!.Id);
-      switch (resultBeneficiaries) {
-         case ResultData<IEnumerable<BeneficiaryDto>?>.Success sucess:
-            logger.LogInformation("AccountDetail: GetBeneficiariesByAccountId: {1}", sucess.Data);
-            _beneficiaryDtos = sucess.Data!.ToList();
+      switch (await beneficiaryService.GetByAccount(_accountDto!.Id)) {
+         case ResultData<IEnumerable<BeneficiaryDto>?>.Success success:
+            logger.LogInformation("TransferCreate: GetBeneficiariesByAccountId() success");
+            _beneficiaryDtos = success.Data!.ToList();
             break;
          case ResultData<IEnumerable<BeneficiaryDto>?>.Error error:
             _errorMessage = error.Exception.Message;
@@ -57,13 +53,13 @@ public partial class TransferCreate(
       
    }
    
-   private void OpenBeneficiary(Guid id) {
-      logger.LogInformation("AccountDetail: nav: /beneficiries/{1}", id);
-      //    navigationManager.NavigateTo($"/accounts/iban/{accountIban}");
+   private void CreateTransfer(Guid id) {
+      logger.LogInformation("TransferCreate: nav: accounts/{1}/beneficiaries/{2}/transfers/create", _accountDto!.Id, id);
+      navigationManager.NavigateTo($"/accounts/{_accountDto!.Id}/beneficiaries/{id}/transfers/create"); 
    }
 
    private void CreateBeneficiary() {
-      logger.LogInformation("AccountDetail: nav: /accounts/{1}/beneficiaries/create", _accountDto!.Id);
+      logger.LogInformation("TransferCreate: nav: /accounts/{1}/beneficiaries/create", _accountDto!.Id);
       navigationManager.NavigateTo($"/accounts/{_accountDto!.Id}/beneficiaries/create");
    }
 }

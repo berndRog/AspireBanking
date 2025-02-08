@@ -19,8 +19,7 @@ public partial class AccountsList(
             return;
         }
 
-        var resultData = await accountService.GetAll();
-        switch (resultData) {
+        switch (await accountService.GetAll()) {
             case ResultData<IEnumerable<AccountDto>?>.Success sucess:
                 logger.LogInformation("OwnerList: GetAll");
                 _accountDtos = sucess.Data!.OrderBy(a => a.Iban).ToList();

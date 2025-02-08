@@ -48,8 +48,9 @@ public partial class AccountByIban(
    
    private void HandleTransactions() {
       logger.LogInformation("AccountDetail: HandleTransactions navigate to /accounts/{1}/transactions/create", _accountDto!.Id);
-      navigationManager.NavigateTo($"/accounts/{_accountDto!.Id}/transctions/create");
+      navigationManager.NavigateTo($"/accounts/{_accountDto!.Id}/transactions/create");
    }
+
 
 
    private void LeaveForm() {

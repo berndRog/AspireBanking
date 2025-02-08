@@ -28,8 +28,8 @@ public partial class OwnerDetail(
          _errorMessage = "Id Kontoinhaber stimmt nicht überein!";
          return;
       }
-      var resultData = await ownerService.GetById(Id);
-      switch (resultData) {
+
+      switch (await ownerService.GetById(Id)) {
          case ResultData<OwnerDto?>.Success sucess:
             logger.LogInformation("OwnerDetail: GetById: {1}", sucess.Data);
             _ownerDto = sucess.Data!;
@@ -39,8 +39,7 @@ public partial class OwnerDetail(
             return;
       }
 
-      var resultAccounts = await accountService.GetAllByOwner(Id);
-      switch (resultAccounts) {
+      switch (await accountService.GetAllByOwner(Id)) {
          case ResultData<IEnumerable<AccountDto>?>.Success sucess:
             logger.LogInformation("OwnerDetail: GetAccoutsByOwnerId: {1}", sucess.Data);
             _accountDtos = sucess.Data!.ToList();

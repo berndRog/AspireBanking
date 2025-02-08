@@ -1,0 +1,37 @@
+@using BankingClient.Ui.Models
+@using Microsoft.AspNetCore.Components.Forms
+
+<EditForm Model="@Model" OnValidSubmit="HandleValidSubmit">
+  <DataAnnotationsValidator />
+    
+  <div class="d-flex">
+    <div class="me-3">
+      <label for="startDatum">Anfangsdatum:</label>
+      <InputFieldDate Id="startDatum" Label="Anfangsdatum" Placeholder="TT.MM.JJJJ"
+                      Value="Model.Start" 
+                      ValueChanged="EventCallback.Factory.Create<DateTime>(this, value => Model.Start = value)" />
+    </div>
+        
+    <div>
+      <label for="endDatum">Enddatum:</label>
+      <InputFieldDate Id="endDatum" 
+                      Label="Enddatum" 
+                      Placeholder="TT.MM.JJJJ"
+                      Value="Model.End" 
+                      ValueChanged="EventCallback.Factory.Create<DateTime>(this, value => Model.End = value)" />
+    </div>
+  </div>
+    
+  <button type="submit" class="btn btn-primary mt-3">Kontoauszug abrufen</button>
+</EditForm>
+
+@code {
+  [Parameter] public TransactionModel Model { get; set; } = new TransactionModel();
+  [Parameter] public EventCallback<TransactionModel> OnSubmit { get; set; }
+
+  private async Task HandleValidSubmit()
+  {
+    await OnSubmit.InvokeAsync(Model);
+  }
+  
+}

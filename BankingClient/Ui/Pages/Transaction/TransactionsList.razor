@@ -1,6 +1,28 @@
-@page "/accounts/{accountId:guid}/transactions"
-<h3>TransactionsList</h3>
+@page "/accounts/{accountId:guid}/transactions/create"
+@using Microsoft.AspNetCore.Authorization
 
-@code {
+@attribute [Authorize(Policy = "UserPolicy")]
+<div class="container-fluid mt-3">
+  @if (!string.IsNullOrEmpty(_errorMessage)) {
+    <div class="alert alert-danger">@_errorMessage</div>
+  }
+
+  <p>TransactionsList @AccountId</p>
   
-}
+  <div class="row">
+    <p>OwnerAccountCard @_ownerDto?.FirstName @_ownerDto?.LastName @_accountDto?.Iban</p>
+    <div class="col-12 mb-3 me-md-3">
+      <OwnerAccountCard FirstName="@_ownerDto?.FirstName" LastName="@_ownerDto?.LastName" Iban="@_accountDto?.Iban"/>
+    </div>
+
+    <p>TransactionStartEnd @_transactionModel.Start.ToString() @_transactionModel.End.ToString()</p>
+    <div class="col-12 mb-3 me-md-3">
+      <TransactionStartEnd Model="_transactionModel" OnSubmit="HandleStartEndDate"/>
+    </div>
+    
+    <div class="col-12 mb-3">
+      @* <TransactionsTable Transactions="@_transactionDtos" /> *@
+
+  </div>
+  </div> 
+  </div>

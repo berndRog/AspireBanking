@@ -12,19 +12,18 @@ public partial class TransactionsList(
    ITransactionService transactionService,
    UserStateHolder userStateHolder,
    NavigationManager navigationManager,
-   ILogger<AccountsList> logger
+   ILogger<TransactionsList> logger
 ): ComponentBase {
    
    [Parameter] public Guid AccountId { get; set; }
    
    private OwnerDto? _ownerDto = null;
    private AccountDto? _accountDto = null;
+   private List<TransactionDto> _transactionDtos = new();
    private string? _errorMessage = null;
+   private TransactionModel _transactionModel = new ();
    
    protected override async Task OnInitializedAsync() {
-      
-
-      
       if (!userStateHolder.IsAuthenticated) {
          _errorMessage = "Admin ist nicht angemeldet!";
          return;
@@ -34,8 +33,6 @@ public partial class TransactionsList(
          return;
       }
       _ownerDto = userStateHolder.OwnerDto!;
-      logger.LogInformation("TransactionList: StateHasChangeg()");
-      StateHasChanged();
 
       logger.LogInformation("TransactionsList: {1} {2} AccountId: {3}", 
          _ownerDto?.FirstName, _ownerDto?.LastName, AccountId);
@@ -47,35 +44,43 @@ public partial class TransactionsList(
                _errorMessage = "Kontozugriff fehlgeschlagen"; 
                return;
             }
-            logger.LogInformation("TransactionList: StateHasChangeg()");
-            StateHasChanged();
             break;
          case ResultData<AccountDto?>.Error error:
             _errorMessage = error.Exception.Message;
             return;
       }
-      StateHasChanged();
+
+      // last six months as default
+      _transactionModel.Start = DateTime.Now.AddMonths(-6);
+      _transactionModel.End = DateTime.Now;
       
+      await FetchTransactions();
    }
-   
-   protected override async Task OnAfterRenderAsync(bool firstRender)
-   {
-      if (firstRender)
-      {
-         StateHasChanged(); // Nochmals UI-Update auslösen
 
-         logger.LogInformation("OnAfterRenderAsync: Rendering TransactionsList Component.");
-         logger.LogInformation("OwnerDto: {0}", _ownerDto);
-         logger.LogInformation("AccountDto: {0}", _accountDto);
-         logger.LogInformation("TransactionModel: {0}", _transactionModel);
+   private async Task FetchTransactions() {
+
+      // convert into UTC Iso format
+      var startIso = _transactionModel.Start.ToUniversalTime().ToString("o");
+      var endIso = _transactionModel.End.ToUniversalTime().ToString("o");
+      
+      logger.LogInformation("TransactionList: GetByAccountId: {1} {2} {3}", 
+         AccountId, startIso, endIso);
+      
+      switch (await transactionService.GetByAccountId(AccountId, startIso, endIso)) {
+         case ResultData<IEnumerable<TransactionDto>?>.Success sucess:
+            logger.LogInformation("TransactionList: GetByAccountId");
+            _transactionDtos = sucess.Data!.OrderByDescending(t => t.Date).ToList();
+            break;
+         case ResultData<IEnumerable<TransactionDto>?>.Error error:
+            _errorMessage = error.Exception.Message;
+            return;
       }
-   }
-    
-   
-   private TransactionModel _transactionModel = new ();
+      logger.LogInformation("TransactionList: StateHasChanged()");
 
-   private void HandleStartEndDate(TransactionModel model) {
-      Console.WriteLine($"Kontoauszug für den Zeitraum {model.Start:dd.MM.yyyy} - {model.End:dd.MM.yyyy}");
-      // Hier kannst du die weitere Verarbeitung des Modells durchführen
+      StateHasChanged();
+   }
+   
+   private async Task HandleStartEndDate(TransactionModel model) {
+      await FetchTransactions();
    }
 }

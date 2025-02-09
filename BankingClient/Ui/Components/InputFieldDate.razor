@@ -1,13 +1,16 @@
 @using System.Globalization
 
 @typeparam TValue where TValue : struct 
-// Ensure TValue is a value type (non-nullable)
+@* Ensure TValue is a value type (non-nullable) *@
 
 <div class="form-group row">
   <label for="@Id" class="col-3 col-form-label">@Label</label>
   <div class="col-9">
-    <input type="text" class="form-control" id="@Id" placeholder="@Placeholder"
-           @bind="FormattedValue" @oninput="OnValueChanged"/>
+    <input type="text" class="form-control" 
+           id="@Id" 
+           placeholder="@Placeholder"
+           @bind="FormattedValue" 
+           @oninput="OnValueChanged"/>
     @if (!string.IsNullOrEmpty(_errorMessage)) {
       <div class="text-danger">@_errorMessage</div>
     }

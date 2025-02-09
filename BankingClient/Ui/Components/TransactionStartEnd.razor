@@ -3,35 +3,40 @@
 
 <EditForm Model="@Model" OnValidSubmit="HandleValidSubmit">
   <DataAnnotationsValidator />
-    
-  <div class="d-flex">
-    <div class="me-3">
-      <label for="startDatum">Anfangsdatum:</label>
-      <InputFieldDate Id="startDatum" Label="Anfangsdatum" Placeholder="TT.MM.JJJJ"
-                      Value="Model.Start" 
-                      ValueChanged="EventCallback.Factory.Create<DateTime>(this, value => Model.Start = value)" />
-    </div>
-        
-    <div>
-      <label for="endDatum">Enddatum:</label>
-      <InputFieldDate Id="endDatum" 
-                      Label="Enddatum" 
-                      Placeholder="TT.MM.JJJJ"
-                      Value="Model.End" 
-                      ValueChanged="EventCallback.Factory.Create<DateTime>(this, value => Model.End = value)" />
+
+  <div class="container">
+    <div class="row g-3 justify-content-center">
+      <!-- Start-Datum -->
+      <div class="col-12 col-lg-4" style="max-width: 300px;">
+        <InputFieldDate Id="startDate"
+                        Label="Start"
+                        Placeholder="TT.MM.JJJJ"
+                        Value="Model.Start"
+                        ValueChanged="EventCallback.Factory.Create<DateTime>(this, value => Model.Start = value)" />
+      </div>
+
+      <!-- End-Datum -->
+      <div class="col-12 col-lg-4" style="max-width: 300px;">
+        <InputFieldDate Id="endDate"
+                        Label="Ende"
+                        Placeholder="TT.MM.JJJJ"
+                        Value="Model.End"
+                        ValueChanged="EventCallback.Factory.Create<DateTime>(this, value => Model.End = value)" />
+      </div>
+
+      <!-- Button -->
+      <div class="col-12 col-lg-2 d-flex align-items-end">
+        <button type="submit" class="btn btn-primary w-100" style="white-space: nowrap;">Abrufen</button>
+      </div>
     </div>
   </div>
-    
-  <button type="submit" class="btn btn-primary mt-3">Kontoauszug abrufen</button>
 </EditForm>
 
 @code {
-  [Parameter] public TransactionModel Model { get; set; } = new TransactionModel();
+  [Parameter] public TransactionModel Model { get; set; } = new ();
   [Parameter] public EventCallback<TransactionModel> OnSubmit { get; set; }
 
-  private async Task HandleValidSubmit()
-  {
+  private async Task HandleValidSubmit() {
     await OnSubmit.InvokeAsync(Model);
   }
-  
 }

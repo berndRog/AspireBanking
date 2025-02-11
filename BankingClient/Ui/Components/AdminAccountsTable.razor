@@ -2,7 +2,7 @@
 @using BankingClient.Core.Dto
 <div class="card shadow-sm w-100">
   <div class="card-body">
-    <h5 class="card-title">Konten</h5>
+    <h6 class="card-title">Konten</h6>
 
     @if (Accounts?.Any() == true) {
       <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
@@ -19,11 +19,6 @@
             <tr>
               <td>@account.Iban</td>
               <td>@account.Balance.ToString("C", CultureInfo.CurrentCulture)</td>
-              <td>
-                <button class="btn btn-primary btn-sm" @onclick="() => OnOpenAccount.InvokeAsync(account.Id)">
-                  Konto öffnen
-                </button>
-              </td>
             </tr>
           }
           </tbody>

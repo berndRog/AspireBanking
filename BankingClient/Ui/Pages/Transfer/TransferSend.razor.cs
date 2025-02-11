@@ -72,6 +72,7 @@ public partial class TransferSend(
       // do the money transfer
       var accountId = _accountDto!.Id;
       var beneficiaryId = _beneficiaryDto!.Id;
+      
       var transferDto = new TransferDto {
          Amount = _transferModel.Amount,
          Description = _transferModel.TransferReason,
@@ -79,6 +80,10 @@ public partial class TransferSend(
          AccountId = accountId,
          BeneficiaryId = beneficiaryId
       };
+      
+      logger.LogInformation("TransferSend: SendTransfer: {1} {2} {3} {4} {5} {6}",
+         transferDto.Amount, transferDto.Description, transferDto.Date, 
+         transferDto.AccountId, transferDto.BeneficiaryId, transferDto.Id);
       
       switch (await transferService.SendTransfer(transferDto, accountId)) {
          case ResultData<TransferDto?>.Success sucess:

@@ -1,0 +1,47 @@
+@using System.Globalization
+@using BankingClient.Core.Dto
+<div class="card shadow-sm w-100">
+  <div class="card-body">
+    <h5 class="card-title">Buchungen</h5>
+
+    @if (TransactionListItems?.Any() == true) {
+      <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
+        <table class="table table-sm table-striped table-hover">
+          <thead>
+          <tr>
+            <th class="fw-normal">Datum</th>
+            <th class="fw-normal text-end">Betrag</th> <!-- Betrag rechtsbündig -->
+            <th class="fw-normal">Grund</th>
+            <th class="fw-normal">Vorname</th>
+            <th class="fw-normal">Nachname</th>
+            <th class="fw-normal">IBAN</th>
+          </tr>
+          </thead>
+          <tbody>
+          @foreach (var transactionListItem in TransactionListItems) {
+            <tr>
+              <td>@transactionListItem.Date.ToString("d", CultureInfo.CurrentCulture)</td>
+              <td class="text-end @(transactionListItem.Amount < 0 ? "text-danger" : "")">
+                @transactionListItem.Amount.ToString("C", CultureInfo.CurrentCulture)
+              </td> <!-- Negative Beträge in Rot -->
+              <td>@transactionListItem.Description</td>
+              <td>@transactionListItem.FirstName</td>
+              <td>@transactionListItem.LastName</td>
+              <td>@transactionListItem.Iban</td>
+            </tr>
+          }
+          </tbody>
+        </table>
+      </div>
+    }
+    else {
+      <p>Keine Konten verfügbar.</p>
+    }
+  </div>
+</div>
+
+
+@code {
+  [Parameter] public List<TransactionListItemDto>? TransactionListItems { get; set; }
+  //[Parameter] public EventCallback<Guid> OnOpenTransaction { get; set; }
+}

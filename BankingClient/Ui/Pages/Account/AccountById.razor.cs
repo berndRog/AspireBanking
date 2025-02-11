@@ -31,8 +31,7 @@ public partial class AccountById(
       }
       _ownerDto = userStateHolder.OwnerDto!;
       
-      var resultAccount = await accountService.GetById(Id);
-      switch (resultAccount) {
+      switch (await accountService.GetById(Id)) {
          case ResultData<AccountDto?>.Success sucess:
             logger.LogInformation("AccountDetail: GetByIban: {1}", sucess.Data);
             _accountDto = sucess.Data!;
@@ -42,8 +41,7 @@ public partial class AccountById(
             return;
       }
       
-      var resultBeneficiaries = await beneficiaryService.GetByAccount(_accountDto!.Id);
-      switch (resultBeneficiaries) {
+      switch (await beneficiaryService.GetByAccount(_accountDto!.Id)) {
          case ResultData<IEnumerable<BeneficiaryDto>?>.Success sucess:
             logger.LogInformation("AccountDetail: GetBeneficiariesByAccountId: {1}", sucess.Data);
             _beneficiaryDtos = sucess.Data!.ToList();

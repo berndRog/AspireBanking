@@ -22,38 +22,44 @@ public class TransactionsController(
 ): ControllerBase {
    
    /// <summary>
-   /// List transactions of an account by accountId and time intervall start to end.
+   /// List transactionListItems of an account by accountId and time intervall start to end.
    /// </summary>
-   /// <returns>IList{TransactionDto}; </returns>
+   /// <param name="accountId">AccountId</param>
+   /// <param name="start">IsoTimeStamp (string)</param>
+   /// <param name="end">IsoTimeStamp (string)</param>
+   /// <returns>IList{TransactionListItemDto}; </returns>
    /// <response code="200">Ok. Transactions returned</response>
-   /// <response code="400">Bad request: accountId doesn't exists.</response>
-   [HttpGet("accounts/{accountId:guid}/transactions/filter")]
+   /// <response code="400">Bad request: accountId doesn't exists.</response>*/
+   [HttpGet("accounts/{accountId:guid}/transactions/listitems")]
    [Produces(MediaTypeNames.Application.Json)]
    [ProducesResponseType(StatusCodes.Status200OK)]
    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-   public async Task<ActionResult<IEnumerable<TransactionDto>>> GetTransactionsByAccountId(
+   public async Task<ActionResult<IEnumerable<TransactionListItemDto>>> GetTransactionListItemsByAccountId(
       [FromRoute] Guid accountId,
       [FromQuery] string start,
       [FromQuery] string end
    ){
-      logger.LogDebug("Get");
+      logger.LogDebug("GetTransactionListItemsByAccountId {1} {2} {3}", accountId, start, end);
 
       var account = await accountsRepository.FindByIdAsync(accountId);
       if(account == null)
          return BadRequest("Bad request: accountId does not exist.");
-      
-      var (errorStart, dateTimeStart, errorMessageStart) = Utils.EvalDateTime(start);
-      if(errorStart) return BadRequest(errorMessageStart);
-      
-      var (errorEnd, dateTimeEnd, errorMessageEnd) = Utils.EvalDateTime(end);
-      if(errorEnd) return BadRequest(errorMessageEnd);
 
-      var transactions =
-         await transactionsRepository.FilterByAccountIdAsync(
-            accountId,
-            t => t.Date >= dateTimeStart && t.Date <= dateTimeEnd 
-         );
-      return Ok(mapper.Map<IEnumerable<TransactionDto>>(transactions));
+      try {
+         var dateTimeStart =
+            DateTime.ParseExact(start, "o", null, System.Globalization.DateTimeStyles.RoundtripKind);
+         var dateTimeEnd = 
+            DateTime.ParseExact(end, "o", null, System.Globalization.DateTimeStyles.RoundtripKind);
+         var transactionListItems =
+            await transactionsRepository.FilterListItemsByAccountIdAsync(
+               accountId,
+               t => t.Date >= dateTimeStart && t.Date <= dateTimeEnd 
+            );
+         return Ok(transactionListItems);
+      }
+      catch {
+         return BadRequest($"Transaction: Fehler Zeitstempel start:{start} end:{end}");
+      }
    }
 
    // /// <summary>
@@ -101,3 +107,6 @@ public class TransactionsController(
       return Ok(mapper.Map<TransactionDto>(transaction));
    }
 }
+
+
+// Date Amount Description IBan

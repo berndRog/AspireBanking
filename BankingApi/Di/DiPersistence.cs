@@ -20,9 +20,6 @@ public static class DiPersistence {
       services.AddScoped<IBeneficiariesRepository, BeneficiariesRepository>();
       services.AddScoped<ITransfersRepository, TransfersRepository>();
       services.AddScoped<ITransactionsRepository, TransactionsRepository>();
-      services.AddScoped<ImagesRepository, ImagesRepositoryImpl>();
-      
-      services.AddScoped<IPeopleRepository, PeopleRepository>();
       
       // Add DbContext (Database) to DI-Container
       var (useDatabase, dataSource) = DataContext.EvalDatabaseConfiguration(configuration);

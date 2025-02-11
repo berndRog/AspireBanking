@@ -8,7 +8,9 @@ using Microsoft.AspNetCore.Components;
 namespace BankingClient.Ui.Pages.Transaction;
 
 public partial class TransactionsList(
+   IOwnerService ownerService,
    IAccountService accountService,
+   ITransferService transferService,
    ITransactionService transactionService,
    UserStateHolder userStateHolder,
    NavigationManager navigationManager,
@@ -19,9 +21,9 @@ public partial class TransactionsList(
    
    private OwnerDto? _ownerDto = null;
    private AccountDto? _accountDto = null;
-   private List<TransactionDto> _transactionDtos = new();
+   private List<TransactionListItemDto> _transactionListItemDtos = new();
    private string? _errorMessage = null;
-   private TransactionModel _transactionModel = new ();
+   private TransactionStartEndModel _transactionStartEndModel = new ();
    
    protected override async Task OnInitializedAsync() {
       if (!userStateHolder.IsAuthenticated) {
@@ -51,8 +53,8 @@ public partial class TransactionsList(
       }
 
       // last six months as default
-      _transactionModel.Start = DateTime.Now.AddMonths(-6);
-      _transactionModel.End = DateTime.Now;
+      _transactionStartEndModel.Start = DateTime.Now.AddMonths(-6);
+      _transactionStartEndModel.End = DateTime.Now;
       
       await FetchTransactions();
    }
@@ -60,27 +62,29 @@ public partial class TransactionsList(
    private async Task FetchTransactions() {
 
       // convert into UTC Iso format
-      var startIso = _transactionModel.Start.ToUniversalTime().ToString("o");
-      var endIso = _transactionModel.End.ToUniversalTime().ToString("o");
+      var startIso = _transactionStartEndModel.Start.ToUniversalTime().ToString("o");
+      var endIso = _transactionStartEndModel.End.ToUniversalTime().ToString("o");
       
       logger.LogInformation("TransactionList: GetByAccountId: {1} {2} {3}", 
          AccountId, startIso, endIso);
       
-      switch (await transactionService.GetByAccountId(AccountId, startIso, endIso)) {
-         case ResultData<IEnumerable<TransactionDto>?>.Success sucess:
+      switch (await transactionService.FilterListItemsByAccountId(AccountId, startIso, endIso)) {
+         case ResultData<IEnumerable<TransactionListItemDto>?>.Success sucess:
             logger.LogInformation("TransactionList: GetByAccountId");
-            _transactionDtos = sucess.Data!.OrderByDescending(t => t.Date).ToList();
+            _transactionListItemDtos = sucess.Data!.OrderByDescending(t => t.Date).ToList();
             break;
-         case ResultData<IEnumerable<TransactionDto>?>.Error error:
+         case ResultData<IEnumerable<TransactionListItemDto>?>.Error error:
             _errorMessage = error.Exception.Message;
             return;
       }
+      
+
       logger.LogInformation("TransactionList: StateHasChanged()");
 
       StateHasChanged();
    }
    
-   private async Task HandleStartEndDate(TransactionModel model) {
+   private async Task HandleStartEndDate(TransactionStartEndModel startEndModel) {
       await FetchTransactions();
    }
 }

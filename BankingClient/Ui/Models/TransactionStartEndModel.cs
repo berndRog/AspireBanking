@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 namespace BankingClient.Ui.Models;
 
-public class TransactionModel {
+public class TransactionStartEndModel {
    [Required(ErrorMessage = "Anfangsdatum ist erforderlich.")]
    public DateTime Start { get; set; } = DateTime.Now;
 

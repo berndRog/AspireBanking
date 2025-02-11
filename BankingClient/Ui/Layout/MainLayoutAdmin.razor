@@ -12,9 +12,10 @@
   <div class="row">
     <!-- Sidebar / Navigation -->
     @* <NavColMenu/>  *@
-    <NavRowMenu/>
+    @* <NavRowMenu/> *@
+    @* <LoginDisplay/> *@
     
-    <LoginDisplay/>
+    <NavBarAdmin/>
     
     <!-- Main Content Area -->
     @*<main class="col-12 col-md-9 col-lg-10">*@
@@ -38,7 +39,6 @@
 </style>
 
 @code {
-  private int Year => DateTime.Now.Year;
   protected override void OnInitialized() {
     Logger.LogInformation("MainLayoutUser.OnInitialized()");
   }

@@ -8,7 +8,7 @@
     <input type="text" class="form-control @(HasError ? "is-invalid" : "")"
            id="@Id"
            placeholder="@Placeholder"
-           @bind="RawInputValue"
+           value="@RawInputValue"
            @oninput="OnValueChanged"
            @onblur="FormatValue"/>
 
@@ -22,7 +22,7 @@
   [Parameter] public string Id { get; set; } = string.Empty;
   [Parameter] public string Label { get; set; } = string.Empty;
   [Parameter] public string Placeholder { get; set; } = string.Empty;
-  [Parameter] public TValue Value { get; set; } = default!; // ✅ Ensures TValue is initialized
+  [Parameter] public TValue Value { get; set; } = default!; // ✅ Stellt sicher, dass TValue initialisiert ist
   [Parameter] public EventCallback<TValue> ValueChanged { get; set; }
 
   private string RawInputValue { get; set; } = string.Empty;
@@ -31,12 +31,12 @@
   private CultureInfo culture = new CultureInfo("de-DE");
 
   protected override void OnParametersSet() {
-    RawInputValue = FormatValueForDisplay(Value);
+    RawInputValue = !EqualityComparer<TValue>.Default.Equals(Value, default) ? Value.ToString() : string.Empty;
   }
 
   private async Task OnValueChanged(ChangeEventArgs e) {
     string input = e.Value?.ToString() ?? string.Empty;
-    RawInputValue = input;
+    RawInputValue = input; // Speichert die unformatierte Benutzereingabe
     HasError = false;
 
     if (TryParseValue(input, out TValue parsedValue)) {
@@ -49,7 +49,7 @@
     }
   }
 
-  private void FormatValue() {
+  private void FormatValue(FocusEventArgs e) {
     if (!HasError) {
       RawInputValue = FormatValueForDisplay(Value);
     }
@@ -57,7 +57,7 @@
 
   private string FormatValueForDisplay(TValue value) {
     return value switch {
-      double d => d.ToString("C", culture),
+      double d => d.ToString("C", culture),  // Währungsformatierung
       decimal dec => dec.ToString("C", culture),
       _ => value.ToString() ?? string.Empty
     };
@@ -77,6 +77,7 @@
     return false;
   }
 }
+
 
 
 

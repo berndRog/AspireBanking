@@ -1,7 +1,7 @@
 @using BankingClient.Ui.Models
 @using Microsoft.AspNetCore.Components.Forms
 
-<EditForm Model="@Model" OnValidSubmit="HandleValidSubmit">
+<EditForm Model="@StartEndModel" OnValidSubmit="HandleValidSubmit">
   <DataAnnotationsValidator />
 
   <div class="container">
@@ -11,8 +11,8 @@
         <InputFieldDate Id="startDate"
                         Label="Start"
                         Placeholder="TT.MM.JJJJ"
-                        Value="Model.Start"
-                        ValueChanged="EventCallback.Factory.Create<DateTime>(this, value => Model.Start = value)" />
+                        Value="StartEndModel.Start"
+                        ValueChanged="EventCallback.Factory.Create<DateTime>(this, value => StartEndModel.Start = value)" />
       </div>
 
       <!-- End-Datum -->
@@ -20,8 +20,8 @@
         <InputFieldDate Id="endDate"
                         Label="Ende"
                         Placeholder="TT.MM.JJJJ"
-                        Value="Model.End"
-                        ValueChanged="EventCallback.Factory.Create<DateTime>(this, value => Model.End = value)" />
+                        Value="StartEndModel.End"
+                        ValueChanged="EventCallback.Factory.Create<DateTime>(this, value => StartEndModel.End = value)" />
       </div>
 
       <!-- Button -->
@@ -33,10 +33,10 @@
 </EditForm>
 
 @code {
-  [Parameter] public TransactionModel Model { get; set; } = new ();
-  [Parameter] public EventCallback<TransactionModel> OnSubmit { get; set; }
+  [Parameter] public TransactionStartEndModel StartEndModel { get; set; } = new ();
+  [Parameter] public EventCallback<TransactionStartEndModel> OnSubmit { get; set; }
 
   private async Task HandleValidSubmit() {
-    await OnSubmit.InvokeAsync(Model);
+    await OnSubmit.InvokeAsync(StartEndModel);
   }
 }

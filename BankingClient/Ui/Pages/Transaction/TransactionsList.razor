@@ -17,18 +17,12 @@
     <div class="card-body">
       <h5 class="card-title">Kontoauszug</h5>
       <div class="col-12 mb-3 me-md-3">
-        <TransactionStartEnd Model="_transactionModel" OnSubmit="HandleStartEndDate"/>
+        <TransactionStartEnd StartEndModel="_transactionStartEndModel" OnSubmit="HandleStartEndDate"/>
       </div>
-
-      @*<div class="row">
-
     
-    <div class="col-12 mb-3">
-      $1$ <TransactionsTable Transactions="@_transactionDtos" /> #1#
-
-    </div>
-  </div> *@
-
+      <div class="col-12 mb-3">
+        <TransactionsTable TransactionListItems="@_transactionListItemDtos" />
+      </div>
     </div>
   </div>
-</div>
+</div>  

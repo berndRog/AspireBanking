@@ -1,0 +1,72 @@
+@using System.Globalization
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@inject NavigationManager NavigationManager
+@inject SignOutSessionStateManager SignOutManager
+@inject ILogger<LoginDisplay> Logger
+
+<div class="container-fluid">
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="/index" style="font-size: 1rem;">
+        <span class="bi bi-bank" aria-hidden="true"> Start</span>
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav me-auto">
+          <li class="nav-item">
+            <NavLink class="nav-link" href="/accounts" Match="NavLinkMatch.All">Konten</NavLink>
+          </li>
+      
+   
+        </ul>
+        <AuthorizeView>
+          <Authorized>
+            <div class="d-flex align-items-center">
+              <span class="me-3">@_date&nbsp;&nbsp;&nbsp;</span>
+              <button class="btn btn-danger" @onclick="BeginLogOut">Abmelden</button>
+            </div>
+          </Authorized>
+          <NotAuthorized>
+            <a class="btn btn-primary" href="authentication/login">Anmelden</a>
+          </NotAuthorized>
+        </AuthorizeView>
+      </div>
+    </div>
+  </nav>
+</div>
+
+<style>
+  .nav-item .nav-link:hover {
+    background-color: #f8f9fa; /* Heller Hintergrund beim Hover */
+    color: #007bff; /* Bootstrap-Primärfarbe */
+    transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
+  }
+
+  .nav-item .nav-link.active {
+    background-color: #007bff; /* Primärfarbe für aktiven Link */
+    color: white;
+  }
+</style>
+
+@code {
+  private string _date = DateTime.Now.ToString("g", CultureInfo.CurrentCulture);
+
+  protected override void OnInitialized() {
+    Logger.LogInformation("LoginDisplay.OnInitialized()");
+  }
+
+  private async Task BeginLogOut() {
+    Logger.LogInformation("LoginDisplay.BeginLogout(): Logging out...");
+    try {
+      await SignOutManager.SetSignOutState();
+      NavigationManager.NavigateTo("authentication/logout");
+      Logger.LogInformation("LoginDisplay.BeginLogout(): Logout successful.");
+    }
+    catch (Exception ex) {
+      Logger.LogError(ex, "LoginDisplay.BeginLogout(): Logout failed.");
+    }
+  }
+}
+

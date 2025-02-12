@@ -164,7 +164,7 @@ public class OwnersController(
    /// <response code="409">Conflict: Owner with given id already exists.</response>
    /// <response code="500">Server internal error.</response>
    [HttpPost("owners")]
-   [Authorize(Roles = "webtech-user,webtech-admin")]
+   //[Authorize(Roles = "webtech-user,webtech-admin")]
    [Consumes(MediaTypeNames.Application.Json)]
    [Produces(MediaTypeNames.Application.Json)]
    [ProducesResponseType(StatusCodes.Status201Created)]

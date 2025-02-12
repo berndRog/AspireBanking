@@ -26,9 +26,6 @@ class DataContext(
    public DbSet<Beneficiary> Beneficiaries => Set<Beneficiary>();
    public DbSet<Transfer> Transfers => Set<Transfer>();
    public DbSet<Transaction> Transactions => Set<Transaction>();
-   public DbSet<Person> People => Set<Person>();
-   public DbSet<User> Users => Set<User>();
-   
    #endregion
    
    #region methods

@@ -85,7 +85,6 @@ public class Program {
       builder.Services.AddScoped<IBeneficiaryService, BeneficiaryService>();
       builder.Services.AddScoped<ITransactionService, TransactionService>();
       builder.Services.AddScoped<ITransferService, TransferService>();
-      builder.Services.AddScoped<ImagesService, ImagesServiceImpl>();
       
       // Log all configuration values
       // foreach (var section in builder.Configuration.AsEnumerable()) {

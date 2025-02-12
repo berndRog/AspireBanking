@@ -23,11 +23,6 @@ namespace BankingApi.Core.Mapping;
       CreateMap<Transaction, TransactionDto>()
          .ReverseMap();
       
-      
-      // ----
-      
-      CreateMap<Person, PersonDto>()
-         .ReverseMap();
 
    }
 }

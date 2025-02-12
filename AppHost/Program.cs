@@ -35,6 +35,7 @@ var keycloak = builder.AddKeycloak(name: "keycloak", port: port)
    .WithExternalHttpEndpoints() // Expose HTTP endpoints outside the container
    .WithEnvironment("KEYCLOAK_ADMIN", admin)
    .WithEnvironment("KEYCLOAK_ADMIN_PASSWORD", adminPassword)
+   .WithEnvironment("KEYCLOAK_HOSTNAME_STRICT", "false")  // Allow to use localhost
    .WithEnvironment("KEYCLOAK_FRONTEND_URL", frontendUrl) // to access keyclaok console
    .WithEnvironment("KEYCLOAK_LOGLEVEL", "DEBUG")
    .WithEnvironment("KEYCLOAK_LOG_CONSOLE_COLOR", "true")

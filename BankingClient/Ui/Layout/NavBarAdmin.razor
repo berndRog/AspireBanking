@@ -2,36 +2,27 @@
 @using Microsoft.AspNetCore.Components.WebAssembly.Authentication
 @inject NavigationManager NavigationManager
 @inject SignOutSessionStateManager SignOutManager
-@inject ILogger<LoginDisplay> Logger
+@inject ILogger<NavBarAdmin> Logger
 
 <div class="container-fluid">
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container-fluid">
-      <a class="navbar-brand" href="/index" style="font-size: 1rem;">
-        <span class="bi bi-bank" aria-hidden="true"> Start</span>
-      </a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav me-auto">
           <li class="nav-item">
-            <NavLink class="nav-link" href="/index" Match="NavLinkMatch.All">Home</NavLink>
+            <NavLink class="bi bi-bank nav-link" href="/index" Match="NavLinkMatch.All"> Start</NavLink>
           </li>
           <li class="nav-item">
-            <NavLink class="nav-link" href="/accounts" Match="NavLinkMatch.All">Konten</NavLink>
+            <NavLink class="bi bi-wallet2 nav-link" href="/accounts" Match="NavLinkMatch.All"> Konten</NavLink>
           </li>
           <li class="nav-item">
-            <NavLink class="nav-link" href="/transactions" Match="NavLinkMatch.All">Umsätze</NavLink>
+            <NavLink class="bi bi-journal-text nav-link" href="/transactions" Match="NavLinkMatch.All"> Umsätze</NavLink>
           </li>
           <li class="nav-item">
-            <NavLink class="nav-link" href="/transfers" Match="NavLinkMatch.All">Überweisungen</NavLink>
-          </li>
-          <li class="nav-item">
-            <NavLink class="nav-link" href="/person" Match="NavLinkMatch.All">Person hinzufügen</NavLink>
-          </li>
-          <li class="nav-item">
-            <NavLink class="nav-link" href="/people" Match="NavLinkMatch.All">Personen</NavLink>
+            <NavLink class="bi bi-currency-euro nav-link" href="/transfers" Match="NavLinkMatch.All"> Überweisungen</NavLink>
           </li>
         </ul>
         <AuthorizeView>

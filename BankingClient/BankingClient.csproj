@@ -66,6 +66,9 @@
     <_ContentIncludedByDefault Remove="Ui\Pages\notused\AccountTransactions.razor" />
     <_ContentIncludedByDefault Remove="Ui\Pages\notused\TransferOverview.razor" />
     <_ContentIncludedByDefault Remove="Ui\Pages\Settings\SettingsOverview.razor" />
+    <_ContentIncludedByDefault Remove="Ui\Pages\Person\PeopleList.razor" />
+    <_ContentIncludedByDefault Remove="Ui\Pages\Person\PersonDetail.razor" />
+    <_ContentIncludedByDefault Remove="Ui\Pages\Person\PersonInput.razor" />
   </ItemGroup>
 
 </Project>

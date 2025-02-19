@@ -1,5 +1,6 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Text.Json;
 using BankingClient.Core.Dto;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
@@ -8,7 +9,6 @@ namespace BankingClient.Services;
 public class UserStateHolder(
    ILogger<UserStateHolder> logger
 ) {
-
    // ID Token claims -------------------------------------------------------------------
    private ClaimsPrincipal? _currentUser = null;
    public ClaimsPrincipal? CurrentUser {
@@ -16,11 +16,11 @@ public class UserStateHolder(
       set {
          _currentUser = value;
          logger.LogInformation("UserStateHolder: IsAuthenticated {1}", IsAuthenticated);
-         logger.LogInformation("UserStateHolder: UserName {1}", UserName);
-         logger.LogInformation("UserStateHolder: UserId {1}", UserId);
          logger.LogInformation("UserStateHolder: FirstName {1}", FirstName);
          logger.LogInformation("UserStateHolder: LastName {1}", LastName);
          logger.LogInformation("UserStateHolder: Email {1}", Email);
+         logger.LogInformation("UserStateHolder: UserName {1}", UserName);
+         logger.LogInformation("UserStateHolder: UserId {1}", UserId);
          logger.LogInformation("UserStateHolder: UserRole {1}", UserRole);
       }
    }
@@ -41,8 +41,16 @@ public class UserStateHolder(
       _currentUser?.FindFirst("email")?.Value;
    public string? UserRole {
       get {
-         var roles = _currentUser?.FindAll("roles").Select(c => c.Value);
-         return roles?.FirstOrDefault(role => role.StartsWith("webtech"));
+         var realmAccessClaim = _currentUser?.FindFirst("realm_access");
+         if (realmAccessClaim == null) return null;
+
+         var realmAccess = JsonDocument.Parse(realmAccessClaim.Value);
+         var role = realmAccess.RootElement
+            .GetProperty("roles")
+            .EnumerateArray()
+            .Select(role => role.GetString())
+            .FirstOrDefault(role => role != null && role.StartsWith("webtech"));
+         return role;
       }
    }
    
@@ -55,32 +63,12 @@ public class UserStateHolder(
       AccessToken = token;
       AccessTokenParams = DecodeJwtToken(AccessToken.Value);
       AccessTokenClaims = new JwtSecurityTokenHandler().ReadJwtToken(token.Value).Claims.ToList();
-      AccessTokenClaims.ForEach(c => logger.LogInformation("UserStateHolder: AccessTokenClaims {1}", c));
-      /*
-      // Check roles 
-      var realmAccessClaim = AccessTokenClaims.FirstOrDefault(c => c.Type == "realm_access");
-      if (realmAccessClaim != null) {
-         var realmAccess = System.Text.Json.JsonDocument.Parse(realmAccessClaim.Value);
-         var roles = realmAccess.RootElement
-            .GetProperty("roles")
-            .EnumerateArray()
-            .Select(role => role.GetString())
-            .ToList();
-         foreach (var role in roles) {
-            if (role == null) continue;
-            // we are only interested in the roles starting with "webtech"
-            // webtech-user or webtech-admin
-            // if (role!.StartsWith("webtech")) 
-            //    userStateHolder.AddWebtechRole(role);
-         } // foreach
-      } 
-      */
+      //AccessTokenClaims.ForEach(c => logger.LogInformation("UserStateHolder: AccessTokenClaims {1}", c));
    }
    
    private static Dictionary<string, string> DecodeJwtToken(string jwtToken) {
       var handler = new JwtSecurityTokenHandler();
       var token = handler.ReadJwtToken(jwtToken);
-
       // Group claims by type, if there are multiple claims of the same type
       return token.Claims
          .GroupBy(c => c.Type)
@@ -90,8 +78,10 @@ public class UserStateHolder(
             g => string.Join(", ", g.Select(c => c.Value))
          );
    }
-   
-   // OwnerDto --------------------------------------------------------------------------
+
+   // ====================================================================================
+   // OwnerDto <-> CurrentUser (Identity) mapping
+   // ====================================================================================
    public OwnerDto? OwnerDto { get; private set; } = null;
    
    public void CreateOwnerDto() {
@@ -120,8 +110,6 @@ public class UserStateHolder(
          OwnerDto = OwnerDto with { Email = Email };
       if(UserId != dto.UserId)
          OwnerDto = OwnerDto with { UserId = UserId };
-      if(Email != null && UserRole != dto.UserRole)
-         OwnerDto = OwnerDto with { UserRole = UserRole };
       
       logger.LogInformation("UserStateHolder: UpdateOwnerDto{1}", OwnerDto);
    }

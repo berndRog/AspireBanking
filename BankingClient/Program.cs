@@ -1,6 +1,7 @@
 using System.Globalization;
 using System.Text.Json;
 using BankingClient.Core;
+using BankingClient.Core.Dto;
 using BankingClient.Services;
 using BankingClient.Ui;
 using Microsoft.AspNetCore.Components.Web;
@@ -9,7 +10,9 @@ using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 namespace BankingClient;
 
 public class Program {
+   
    public static async Task Main(string[] args) {
+   
       var builder = WebAssemblyHostBuilder.CreateDefault(args);
       builder.RootComponents.Add<App>("#app");
       builder.RootComponents.Add<HeadOutlet>("head::after");
@@ -40,13 +43,12 @@ public class Program {
          // Configure rgw Keweycloak authentication provider options here.
          builder.Configuration.Bind("Keycloak", options.ProviderOptions);
          // Tell the OIDC handler that the role claim is named "roles"
-         options.UserOptions.RoleClaim = "roles";
-      }).AddAccountClaimsPrincipalFactory<CustomUserFactory>();
+         options.UserOptions.RoleClaim = "realm_access.roles";
+      }); //.AddAccountClaimsPrincipalFactory<CustomUserFactory>();
       
       
       // Add Policy-based Authorization instead of using the role names directly
       // hardcoded role names are not recommended (e.g. "webtech-admin") 
-      // 
       builder.Services.AddAuthorizationCore(options => {
          options.AddPolicy("AdminPolicy", policy =>
             policy.RequireRole("webtech-admin"));

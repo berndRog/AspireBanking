@@ -1,3 +1,4 @@
+using System.Text.Json;
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication.Internal;
 namespace BankingClient;
 
@@ -6,45 +7,69 @@ using System.Threading.Tasks;
 using System.Linq;
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 
-public class CustomUserFactory(IAccessTokenProviderAccessor accessor)
-   : AccountClaimsPrincipalFactory<RemoteUserAccount>(accessor) {
-   
+// public class CustomUserFactory(
+//    IAccessTokenProviderAccessor accessor,
+//    ILogger<CustomUserFactory> logger
+// ) : AccountClaimsPrincipalFactory<RemoteUserAccount>(accessor) {
+//  
+//    public override async ValueTask<ClaimsPrincipal> CreateUserAsync(
+//       RemoteUserAccount userAccount,
+//       RemoteAuthenticationUserOptions options
+//    ) {
+//       var user = await base.CreateUserAsync(userAccount, options);
+//
+//       if (userAccount != null && user.Identity.IsAuthenticated) {
+//          var identity = (ClaimsIdentity)user.Identity;
+//          logger.LogInformation("CustomUserFactory: CreateUserAsync: User is authenticated");
+//          
+//          // Extract realm roles from JSON object
+//          if (userAccount.AdditionalProperties.TryGetValue("realm_access", out var realmAccess) &&
+//              realmAccess is JsonElement realmJson) {
+//             
+//             logger.LogInformation("CustomUserFactory: CreateUserAsync: realm_access found");
+//             if (realmJson.TryGetProperty("roles", out var rolesElement) &&
+//                 rolesElement.ValueKind == JsonValueKind.Array) {
+//                foreach (var role in rolesElement.EnumerateArray()) {
+//                   identity.AddClaim(new Claim(ClaimTypes.Role, role.GetString()));
+//                }
+//             }
+//          }
+//       }
+//
+//       return user;
+//    }
+// }
+//
+
+public class CustomUserFactory(
+   IAccessTokenProviderAccessor accessor,
+   ILogger<CustomUserFactory> logger
+) : AccountClaimsPrincipalFactory<RemoteUserAccount>(accessor) {
+
    public override async ValueTask<ClaimsPrincipal> CreateUserAsync(
-      RemoteUserAccount account,
-      RemoteAuthenticationUserOptions options) {
+      RemoteUserAccount userAccount,
+      RemoteAuthenticationUserOptions options
+   ) {
       // Get the default ClaimsPrincipal
-      var user = await base.CreateUserAsync(account, options);
+      var user = await base.CreateUserAsync(userAccount, options);
 
       if (user.Identity?.IsAuthenticated ?? false) {
          var identity = (ClaimsIdentity)user.Identity;
 
-         // Get all claims of the type specified by options.RoleClaim (normally "roles")
-         var rolesClaims = identity.FindAll(options.RoleClaim).ToList();
+         if (userAccount.AdditionalProperties.TryGetValue("realm_access", out var realmAccess) &&
+             realmAccess is JsonElement realmJson) {
 
-         // Remove the existing aggregated claims
-         foreach (var claim in rolesClaims) {
-            identity.RemoveClaim(claim);
-         }
-
-         // Process each role claim value
-         foreach (var claim in rolesClaims) {
-            var rawValue = claim.Value.Trim();
-
-            // If the value contains a comma, assume it's a list of roles in one claim.
-            if (rawValue.Contains(",")) {
-               var roles = rawValue.Split(',')
-                  .Select(role => role.Trim().Trim('[', ']', '\"'))
-                  .Where(role => !string.IsNullOrWhiteSpace(role));
-
-               foreach (var role in roles) {
-                  identity.AddClaim(new Claim(options.RoleClaim, role));
-               }
-            }
-            else {
-               // Otherwise, just sanitize the single claim value.
-               var sanitized = rawValue.Trim('[', ']', '\"');
-               if (!string.IsNullOrWhiteSpace(sanitized)) {
-                  identity.AddClaim(new Claim(options.RoleClaim, sanitized));
+            logger.LogInformation("CustomUserFactory: CreateUserAsync: realm_access {1}", realmJson);
+            // Extract roles from the realm_access claim
+            if (realmJson.TryGetProperty("roles", out var rolesElement) &&
+                rolesElement.ValueKind == JsonValueKind.Array) {
+            
+               foreach (var role in rolesElement.EnumerateArray()) {
+                  var roleValue = role.GetString();
+                  if (!string.IsNullOrEmpty(roleValue) && roleValue.StartsWith("webtech")) {
+                     
+                     identity.AddClaim(new Claim(ClaimTypes.Role, roleValue));
+                  }
                }
             }
          }
@@ -52,3 +77,4 @@ public class CustomUserFactory(IAccessTokenProviderAccessor accessor)
       return user;
    }
 }
+       

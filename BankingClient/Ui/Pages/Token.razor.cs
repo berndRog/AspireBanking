@@ -23,9 +23,20 @@ public partial class Token(
     var authState = await authenticationStateProvider.GetAuthenticationStateAsync();
     
     // User is authenticated
-    if (authState.User.Identity is { IsAuthenticated: true }) {
+    if (authState.User.Identity?.IsAuthenticated == true) {
       logger.LogInformation("Token: User is authenticated");
       userStateHolder.CurrentUser = authState.User;
+      
+      // attach the owner by userId
+      switch (await ownerService.GetByUserId(userStateHolder.UserId)) {
+        case ResultData<OwnerDto?>.Success success:
+          userStateHolder.UpdateOwnerDto(success.Data!);
+          break;
+        case ResultData<OwnerDto?>.Error error:
+          logger.LogError("Token: GetByUserId Error: {1}", error.Exception.Message);
+          //_errorMessage = error.Exception.Message;
+          break;
+      }
       
       // Evaluate the access Token
       logger.LogInformation("Token: Requesting Access Token");
@@ -36,14 +47,14 @@ public partial class Token(
         logger.LogInformation($"Token: Access Token retrieved");
         userStateHolder.ProcessAccessToken(token);
         
-        // Case 1 Owner does not exist, create it
+        // Case 1 Owner does not exist, create it (remove it for the Banking API)
         var exists = await ownerService.ExistsByUserName(userStateHolder.UserName);
         if (!exists) {
           logger.LogInformation("Token: Owner does not exist, create a new owner");
           userStateHolder.CreateOwnerDto();
           await ownerService.Post(userStateHolder.OwnerDto!);
         }
-        // Case 2: Owner exists
+        // Case 2: Owner exists (standard case for the Banking API)
         else {
           logger.LogInformation("Token: Owner exists, get owner by username");
           var resultData = await ownerService.GetByUserName(userStateHolder.UserName);
@@ -60,9 +71,6 @@ public partial class Token(
               break;
           }
         }
-        // navigate to the admin or user page
-        // await NavigateAuthenticatedUser();
-        
       } // if result.TryGetToken
       else {
         _ = new Dictionary<string, string> {
@@ -80,7 +88,6 @@ public partial class Token(
   
   private async Task LeavePage() {
     logger.LogInformation("Token: LeavePage");
-
     await NavigateAuthenticatedUser();
   }
 
@@ -109,6 +116,3 @@ public partial class Token(
     }
   }
 }
-
-
-

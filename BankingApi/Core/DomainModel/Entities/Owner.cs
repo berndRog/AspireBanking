@@ -4,7 +4,9 @@ using BankingApi.Core.DomainModel.NullEntities;
 namespace BankingApi.Core.DomainModel.Entities;
 
 public class Owner: AEntity {
-   #region properties
+   
+   
+   
    public override Guid Id { get; init; } = Guid.NewGuid();
    public string FirstName { get; set; } = string.Empty;
    public string LastName { get; set; } = string.Empty;
@@ -14,9 +16,9 @@ public class Owner: AEntity {
    
    // Navigation-Property Owner --> Account [0..*]  
    public IList<Account> Accounts { get; } = new List<Account>();
-   #endregion
+
    
-   #region methods
+   
    public void Update(Owner updOwner) {
       FirstName = updOwner.FirstName;
       LastName = updOwner.LastName;
@@ -37,5 +39,5 @@ public class Owner: AEntity {
    // account.OwnerId = null;
       Accounts.Remove(account);
    }   
-   #endregion
+
 }

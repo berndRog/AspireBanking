@@ -8,7 +8,5 @@ public sealed class NullOwner: Owner {
    // Singleton Skeet Version 4
    public static NullOwner Instance { get; } = new ();
    static NullOwner() { }
-   private NullOwner() { 
-      Id = Guid.Empty;
-   }
+   private NullOwner() { }
 }

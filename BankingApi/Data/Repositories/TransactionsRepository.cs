@@ -9,7 +9,7 @@ using BankingApi.Core.DomainModel.Entities;
 using BankingApi.Core.Dto;
 using Microsoft.EntityFrameworkCore;
 [assembly: InternalsVisibleTo("BankingApiTest")]
-namespace BankingApi.Persistence.Repositories;
+namespace BankingApi.Data.Repositories;
 internal class TransactionsRepository(
    DataContext dataContext
 // ILogger<TransactionsRepository> logger
@@ -44,16 +44,18 @@ internal class TransactionsRepository(
       Guid accountId,
       Expression<Func<Transaction, bool>>? predicate
    ) {
-      // transaction for AccountId
-      var query = _typeDbSet.AsQueryable()  // IQueryable<Transaction>
-         .Where(t => t.AccountId == accountId).AsQueryable()
-         .Where(predicate)
-         .AsSingleQuery();
       
-      var dtoQuery = query
-         .Include(transaction => transaction.Transfer)
-         .ThenInclude(transfer => transfer.Beneficiary)
-         // transaction --> transfer --> beneficiary
+      // transaction for AccountId
+      var query = _typeDbSet.AsQueryable() // IQueryable<Transaction>
+         .Where(t => t.AccountId == accountId);
+      if (predicate is not null) 
+         query = query.Where(predicate);
+
+      // transaction --> transfer --> beneficiary
+      var dtoQuery = query  // (t = transaction)
+         .Include(t => t.Transfer)
+         .Where(t => t.Transfer != null)  // Filter out null transfers before ThenInclude
+         .Include(t => t.Transfer!.Beneficiary)
          .Select(t => new TransactionListItemDto(
             t.Id,
             t.Date,

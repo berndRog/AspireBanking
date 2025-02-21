@@ -8,7 +8,7 @@ using BankingApi.Core;
 using BankingApi.Core.DomainModel.Entities;
 using Microsoft.EntityFrameworkCore;
 [assembly: InternalsVisibleTo("BankingApiTest")]
-namespace BankingApi.Persistence.Repositories;
+namespace BankingApi.Data.Repositories;
 
 internal abstract class AGenericRepository<T> : IGenericRepository<T>
    where T : AEntity {

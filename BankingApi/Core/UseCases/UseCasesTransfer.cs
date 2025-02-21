@@ -9,53 +9,59 @@ public class UseCasesTransfer(
    ITransactionsRepository transactionsRepository,
    IDataContext dataContext
 ): IUseCasesTransfer {
-
+   
+   private (Transaction debit, Transaction credit) CreateTransactions(DateTime date, double amount) {
+      var debit = new Transaction();
+      var credit = new Transaction();
+      // Lastschrift
+      debit.Set(date: date);
+      debit.Set(amount: -amount);
+      // Gutschrift
+      credit.Set(date: date);
+      credit.Set(amount);
+      return (debit, credit);
+   }
+   
    public async Task<ResultData<Transfer>> SendMoneyAsync(
       Guid accountDebitId,         // Account from which the transfer is made (debit) 
       Transfer transfer            // Transfer data transferDto
    ){
       try {
-         
          // check if debit account exists (Lastschrift)
          var accountDebit = await accountsRepository.FindByIdAsync(accountDebitId);
+         // check if the benificiary exits
+         Beneficiary? beneficiary = null;
+         if (transfer.BeneficiaryId != null) {
+            var beneficiaryId = (Guid)transfer.BeneficiaryId!; // convert nullable to non-nullable
+            beneficiary = await beneficiariesRepository.FindByIdAsync(beneficiaryId);
+         }
+         // check if credit account exists (Gutschrift)
+         Account? accountCredit = null;
+         if (beneficiary?.Iban != null) {
+            string beneficiaryIban = beneficiary.Iban!; // convert nullable to non-nullable
+            accountCredit = await accountsRepository.FindByAsync(a => a.Iban == beneficiaryIban);
+         }
+         
+         // return errorcodes when accountDebit, accountCredit or beneficiary is null
          if(accountDebit == null)
             return new Error<Transfer>(404,"Debit Account for the transfer doesn't exist.");
-         // overwrite transferDto with accountDebitId
-         transfer.AccountId = accountDebitId;
-         
-         // check if the benificiary exits
-         if(transfer.BeneficiaryId == null) 
-            return new Error<Transfer>(404, "BeneficiaryId for the transfer not given.");
-         var beneficiary = 
-            await beneficiariesRepository.FindByIdAsync((Guid)transfer.BeneficiaryId);
-         if(beneficiary == null) 
-            return new Error<Transfer>(404, "Beneficiary for the transfer doesn't exist.");
-      
-         // check if credit account exists (Gutschrift)
-         var accountCredit = await accountsRepository.FindByAsync(a => a.Iban == beneficiary.Iban);
          if(accountCredit == null)
             return new Error<Transfer>(404, "Credit Account (Iban) for the transfer doesn't exist."); 
-         
-         // check if transfer with transferDto.Id exists
+         if(beneficiary == null) 
+            return new Error<Transfer>(404, "Beneficiary for the transfer doesn't exist.");
+         if(transfer.BeneficiaryId == null) 
+            return new Error<Transfer>(404, "BeneficiaryId for the transfer not given.");
          if(await transfersRepository.FindByIdAsync(transfer.Id) != null)
             return new Error<Transfer>(409, "Transfer already exists.");
          
-         Transaction transactionDebit = new() {
-            Date = transfer.Date,
-            Amount = -transfer.Amount
-         };
-         Transaction transactionCredit = new() {
-            Date = transfer.Date,
-            Amount = +transfer.Amount
-         };
-         
-         // add transactions to transfer
-         transfer.Add(transactionDebit);
-         transfer.Add(transactionCredit);
-         
+         // set accountDebitId for transfer
+         transfer.Set(accountId: accountDebitId);
          // add transfer to debit account and beneficiary
          accountDebit.Add(transfer, beneficiary);
          
+         // create transactions
+         var (transactionDebit, transactionCredit) = 
+            CreateTransactions(transfer.Date, transfer.Amount);
          // add transaction to debit account (Lastschrift)
          accountDebit.Add(transactionDebit, transfer);
          // add transaction to credit account (Gutschrift)     
@@ -71,7 +77,6 @@ public class UseCasesTransfer(
          
       } catch (Exception e) {
          return new Error<Transfer>(500, e.Message);
-         
       }
    }
 
@@ -116,14 +121,11 @@ public class UseCasesTransfer(
       //    return new Error<Transfer>(404, "Reverse Money: Original credit transaction not found.");     
 
       // Create transfer and two transactions
-      reverseTransfer.Amount = -originalTransfer.Amount;
-      
-      Transaction reverseTransactionDebit = new() {
-         Amount = +originalTransfer.Amount
-      };
-      Transaction reverseTransactionCredit = new() {
-         Amount = -originalTransfer.Amount
-      };
+      reverseTransfer.Set(-originalTransfer.Amount);
+      Transaction reverseTransactionDebit = new ();
+      reverseTransactionDebit.Set(amount: +originalTransfer.Amount);
+      Transaction reverseTransactionCredit = new();
+      reverseTransactionCredit.Set(amount: -originalTransfer.Amount);
       
       // and add transfer to account
       accountDebit.Add(reverseTransfer, beneficiary);

@@ -26,8 +26,7 @@ public class OwnersController(
    IMapper mapper,
    ILogger<OwnersController> logger
 ): ControllerBase {
-
-   #region endpoint methods
+   
    /// <summary>
    /// Get all owners 
    /// </summary>
@@ -72,6 +71,9 @@ public class OwnersController(
    /// <param name="userName"></param>
    /// <returns></returns>
    [HttpGet("owners/exists")]
+   [Authorize(Roles = "webtech-user,webtech-admin")]
+   [Produces(MediaTypeNames.Application.Json)]
+   [ProducesResponseType(StatusCodes.Status200OK)]
    public async Task<IActionResult> ResourceExists(
       [FromQuery] string userName
    ) {
@@ -130,7 +132,7 @@ public class OwnersController(
 
    
    /// <summary>
-   /// List owners by FirstName with SQL like %name%  
+   /// List owners by Name with SQL like %name%  
    /// </summary>
    /// <param name="name">query: ?name=complete name</param>
    /// <returns>IEnumerable{OwnerDto}</returns>
@@ -164,7 +166,7 @@ public class OwnersController(
    /// <response code="409">Conflict: Owner with given id already exists.</response>
    /// <response code="500">Server internal error.</response>
    [HttpPost("owners")]
-   //[Authorize(Roles = "webtech-user,webtech-admin")]
+   [Authorize(Roles = "webtech-user,webtech-admin")]
    [Consumes(MediaTypeNames.Application.Json)]
    [Produces(MediaTypeNames.Application.Json)]
    [ProducesResponseType(StatusCodes.Status201Created)]
@@ -218,6 +220,7 @@ public class OwnersController(
    /// <param name="updOwnerDto">Parameter to update as OwnerDto</param>
    /// <returns>OwnerDto, the updated resource</returns>
    [HttpPut("owners/{id:guid}")] 
+   [Authorize(Roles = "webtech-user,webtech-admin")]
    [Consumes(MediaTypeNames.Application.Json)]
    [Produces(MediaTypeNames.Application.Json)]
    [ProducesResponseType(StatusCodes.Status200OK)]
@@ -258,6 +261,7 @@ public class OwnersController(
    /// </summary>
    /// <param name="id">id of the the owner</param>
    [HttpDelete("owners/{id:guid}")]
+   [Authorize(Roles = "webtech-admin")]
    [ProducesResponseType(StatusCodes.Status204NoContent)]
    [ProducesResponseType(StatusCodes.Status404NotFound)]
    public async Task<IActionResult> DeleteOwner(
@@ -295,7 +299,6 @@ public class OwnersController(
       // return no content
       return NoContent(); 
    }
-   #endregion
    
    #region local methods
    private async Task<(bool error, ActionResult<OwnerDto> result)> ValidateOwnerAsync(OwnerDto ownerDto) {
@@ -313,10 +316,13 @@ public class OwnersController(
          return (true, BadRequest("FirstName is too short (min 3 chars)."));
       if (ownerDto.FirstName.Length > 128)
          return (true, BadRequest("FirstName is too long (max 128 chars)."));
-      
+
       try {
-         var mailAddress = new System.Net.Mail.MailAddress(ownerDto.Email);
-      } catch {
+         if (ownerDto.Email != null) {
+            var mail = new System.Net.Mail.MailAddress(ownerDto.Email);
+         }
+      } 
+      catch {
          return (true, BadRequest("Email is not valid."));
       }
       return (false, Ok(ownerDto));

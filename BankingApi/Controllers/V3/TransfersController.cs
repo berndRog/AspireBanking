@@ -131,16 +131,14 @@ public class TransfersController(
       if (originalTransfer == null)
          return NotFound("Original transfer not found.");
       
-      var reverseTransfer = new Transfer {
-         Id = Guid.NewGuid(),
-         Date = DateTime.UtcNow,
-         Description = "Reverse transfer",
-         Amount = -originalTransfer.Amount,
-         Beneficiary =  originalTransfer.Beneficiary,
-         BeneficiaryId = originalTransfer.BeneficiaryId,
-         Account = originalTransfer.Account,
-         AccountId = originalTransfer.AccountId
-      };
+      var reverseTransfer = new Transfer(
+         id: Guid.NewGuid(),
+         date: DateTime.UtcNow,
+         description: "Reverse transfer",
+         amount: -originalTransfer.Amount,
+         beneficiary:  originalTransfer.Beneficiary,
+         account: originalTransfer.Account
+      );
       
       // reverse money, i.e. create reverse transfer and two transactions
       var resultData = await useCasesTransfer.ReverseMoneyAsync(originalTransferId, reverseTransfer);

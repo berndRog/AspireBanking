@@ -10,5 +10,5 @@ public record TransferDto (
    string Description,
    double Amount,
    Guid AccountId = default,
-   Guid BeneficiaryId = default
+   Guid? BeneficiaryId = null
 );

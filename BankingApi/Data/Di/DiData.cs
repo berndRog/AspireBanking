@@ -1,20 +1,17 @@
 ﻿using System;
 using BankingApi.Core;
-using BankingApi.Core.DomainModel;
-using BankingApi.Persistence;
-using BankingApi.Persistence.Repositories;
+using BankingApi.Data.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-namespace BankingApi.Di;
+namespace BankingApi.Data.Di;
 
-public static class DiPersistence {
-   public static void AddPersistence(
+public static class DiData {
+   public static void AddDatabase(
       this IServiceCollection services,
       IConfiguration configuration,
       bool isTest = false
    ){
-
       services.AddScoped<IOwnersRepository, OwnersRepository>();
       services.AddScoped<IAccountsRepository, AccountsRepository>();
       services.AddScoped<IBeneficiariesRepository, BeneficiariesRepository>();
@@ -30,13 +27,6 @@ public static class DiPersistence {
             services.AddDbContext<IDataContext, DataContext>(options => 
                options.UseSqlServer(dataSource)
             );
-            break;
-         case "MariaDb":
-//          var databaseVersion = MariaDbServerVersion.AutoDetect(dataSource)
-//          var version = new MariaDbServerVersion(databaseVersion);
-            // services.AddDbContext<CDbContext>(options => 
-            //    options.UseMySql(dataSource, version)
-            // );
             break;
          case "Postgres":
             services.AddDbContext<IDataContext, DataContext>((_, options) =>

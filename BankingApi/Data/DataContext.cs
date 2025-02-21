@@ -8,8 +8,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 [assembly: InternalsVisibleTo("BankingApiTest")]
-namespace BankingApi.Persistence; 
-class DataContext(
+namespace BankingApi.Data; 
+internal class DataContext(
    DbContextOptions<DataContext> options
 ) : DbContext(options), IDataContext {
 

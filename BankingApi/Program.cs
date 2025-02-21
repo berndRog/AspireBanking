@@ -9,8 +9,9 @@ using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Asp.Versioning;
 using Asp.Versioning.ApiExplorer;
+using BankingApi.Core.Di;
 using BankingApi.Core.Misc;
-using BankingApi.Di;
+using BankingApi.Data.Di;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http.Features;
@@ -52,7 +53,7 @@ public class Program {
       builder.Services.AddCore();
 
       // add Persistence
-      builder.Services.AddPersistence(builder.Configuration);
+      builder.Services.AddDatabase(builder.Configuration);
 
       // add Error handling
       builder.Services.AddProblemDetails();
@@ -88,6 +89,9 @@ public class Program {
       //
       WebApplication app = builder.Build();
 
+      // Add UseHttpLogging before other middleware
+      app.UseHttpLogging();
+      
       // 1) Error handling (and developer exception page in dev)
       if (app.Environment.IsDevelopment())
          app.UseExceptionHandler("/error-development");

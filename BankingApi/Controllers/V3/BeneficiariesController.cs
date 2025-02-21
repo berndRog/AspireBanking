@@ -9,6 +9,7 @@ using BankingApi.Core;
 using BankingApi.Core.DomainModel.Entities;
 using BankingApi.Core.Dto;
 using BankingApi.Core.Misc;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -25,6 +26,21 @@ public class BeneficiariesController(
    IMapper mapper,
    ILogger<BeneficiariesController> logger
 ): ControllerBase {
+
+   /// <summary>
+   /// List all beneficiaries.
+   /// </summary>
+   /// <returns>IEnumerable{BeneficiaryDto}</returns>
+   /// <response code="200">Ok. Beneficiarys returned.</response>
+   [HttpGet("beneficiaries")]
+   [Authorize(Roles = "webtech-admin")]
+   [Produces(MediaTypeNames.Application.Json)]
+   [ProducesResponseType(StatusCodes.Status200OK)]
+   [ProducesDefaultResponseType]
+   public async Task<ActionResult<IEnumerable<BeneficiaryDto>>> GetAll(){
+      var beneficiaries = await beneficiariesRepository.SelectAsync();
+      return Ok(mapper.Map<IEnumerable<BeneficiaryDto>>(beneficiaries));
+   }
    
    /// <summary>
    /// List beneficiaries of an account by accountId.
@@ -34,6 +50,7 @@ public class BeneficiariesController(
    /// <response code="200">Ok. Beneficiarys returned.</response>
    /// <response code="400">Bad request: accountId does not exist.</response>
    [HttpGet("accounts/{accountId:Guid}/beneficiaries")]
+   [Authorize(Roles = "webtech-user,webtech-admin")]
    [Produces(MediaTypeNames.Application.Json)]
    [ProducesResponseType(StatusCodes.Status200OK)]
    [ProducesResponseType(typeof(string), StatusCodes.Status409Conflict)]
@@ -61,6 +78,7 @@ public class BeneficiariesController(
    /// <response code="200">Ok: Beneficiary with given id returned</response>
    /// <response code="404">NotFound: Beneficiary with given id not found</response>
    [HttpGet("beneficiaries/{id:guid}")]
+   [Authorize(Roles = "webtech-user,webtech-admin")]
    [Produces(MediaTypeNames.Application.Json)]
    [ProducesResponseType(typeof(BeneficiaryDto), StatusCodes.Status200OK)]
    [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
@@ -83,6 +101,7 @@ public class BeneficiariesController(
    /// <response code="200">Ok: Beneficiary with given name returned</response>
    /// <response code="404">NotFound: Beneficiary with given name not found</response>
    [HttpGet("beneficiaries/name")]
+   [Authorize(Roles = "webtech-user,webtech-admin")]
    [Produces(MediaTypeNames.Application.Json)]
    [ProducesResponseType(typeof(BeneficiaryDto), StatusCodes.Status200OK)]
    [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
@@ -110,6 +129,7 @@ public class BeneficiariesController(
    /// <response code="400">Bad request: accountId and Beneficiary.AccountId do not match.</response>
    /// <response code="409">Conflict: Beneficiary with given id already exists.</response>
    [HttpPost("accounts/{accountId:Guid}/beneficiaries")]
+   [Authorize(Roles = "webtech-user,webtech-admin")]
    [Consumes(MediaTypeNames.Application.Json)]
    [Produces(MediaTypeNames.Application.Json)]
    [ProducesResponseType(typeof(BeneficiaryDto), StatusCodes.Status201Created)]
@@ -164,6 +184,7 @@ public class BeneficiariesController(
    /// <response code="204">NoContent: Beneficiary with given id is deleted.</response>
    /// <response code="404">NotFound: Beneficiary with given id not found</response>
    [HttpDelete("accounts/{accountId:guid}/beneficiaries/{id:guid}")]
+   [Authorize(Roles = "webtech-admin")]
    [Produces(MediaTypeNames.Application.Json)]
    [ProducesResponseType(StatusCodes.Status200OK)]
    [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -191,8 +212,7 @@ public class BeneficiariesController(
       // Load all transfers with the beneficiary to delete
       var transfers = await transfersRepository.SelectByBeneficiaryIdAsync(id);
       foreach(var transfer in transfers) {
-         transfer.Beneficiary = null;
-         transfer.BeneficiaryId = Guid.Empty;
+         transfer.Remove();
          await transfersRepository.UpdateAsync(transfer);
       }
       

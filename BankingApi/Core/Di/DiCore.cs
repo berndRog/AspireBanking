@@ -1,10 +1,9 @@
 ﻿using AutoMapper;
-using BankingApi.Core;
 using BankingApi.Core.DomainModel.Entities;
 using BankingApi.Core.Mapping;
 using BankingApi.Core.UseCases;
 using Microsoft.Extensions.DependencyInjection;
-namespace BankingApi.Di; 
+namespace BankingApi.Core.Di; 
 public static class DiCore {
    public static void AddCore(
       this IServiceCollection services

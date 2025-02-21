@@ -51,6 +51,7 @@ public class
    /// <returns>IEnumerable{AccountDto}; </returns>
    /// <response code="200">Ok. Accounts returned.</response>
    [HttpGet("owners/{ownerId:Guid}/accounts")]
+   [Authorize(Roles = "webtech-user,webtech-admin")]
    [Produces(MediaTypeNames.Application.Json)]
    [ProducesResponseType(StatusCodes.Status200OK)]
    [ProducesDefaultResponseType]
@@ -71,6 +72,7 @@ public class
    /// <response code="200">Ok: Account with given id returned.</response>
    /// <response code="404">NotFound: Account with given id not found.</response>
    [HttpGet("accounts/{id:guid}")]
+   [Authorize(Roles = "webtech-user,webtech-admin")]
    [Produces(MediaTypeNames.Application.Json)]
    [ProducesResponseType(StatusCodes.Status200OK)]
    [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -94,6 +96,7 @@ public class
    /// <response code="400">BadRequest: Iban is not valid.</response>
    /// <response code="404">NotFound: Account with given iban not found.</response>
    [HttpGet("accounts/iban/{iban}")]
+   [Authorize(Roles = "webtech-user,webtech-admin")]
    [Produces(MediaTypeNames.Application.Json)]
    [ProducesResponseType(StatusCodes.Status200OK)]
    [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -125,6 +128,7 @@ public class
    /// <response code="400">Bad request: ownerId from route does not match ownerId in account.</response>
    /// <response code="409">Conflict: Account with given id already exists.</response>
    [HttpPost("owners/{ownerId:guid}/accounts")]
+   [Authorize(Roles = "webtech-user,webtech-admin")]
    [Consumes(MediaTypeNames.Application.Json)]
    [Produces(MediaTypeNames.Application.Json)]
    [ProducesResponseType(StatusCodes.Status201Created)]
@@ -175,6 +179,7 @@ public class
    /// <param name="ownerId">id of the the owner</param>
    /// <param name="id">id of the account</param>
    [HttpDelete("owners/{ownerId:guid}/accounts/{id:guid}")] 
+   [Authorize(Roles = "webtech-admin")]
    [ProducesResponseType(StatusCodes.Status204NoContent)]
    [ProducesResponseType(StatusCodes.Status404NotFound)]
    

@@ -7,5 +7,5 @@ public sealed class NullAccount: Account {
    // Singleton Skeet Version 4
    public static NullAccount Instance { get; } = new ();
    static NullAccount() { }
-   private NullAccount() { Id = Guid.Empty;  }
+   private NullAccount() {}
 }
